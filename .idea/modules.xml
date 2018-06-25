@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mfp-app/mfp-app.iml" filepath="$PROJECT_DIR$/mfp-app/mfp-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mfp-common/mfp-common.iml" filepath="$PROJECT_DIR$/mfp-common/mfp-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mfp-core/mfp-core.iml" filepath="$PROJECT_DIR$/mfp-core/mfp-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mfp-root.iml" filepath="$PROJECT_DIR$/mfp-root.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mfp-server/mfp-server.iml" filepath="$PROJECT_DIR$/mfp-server/mfp-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mfp-web/mfp-web.iml" filepath="$PROJECT_DIR$/mfp-web/mfp-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yrnet/yrnet.iml" filepath="$PROJECT_DIR$/yrnet/yrnet.iml" />
+    </modules>
+  </component>
+</project>

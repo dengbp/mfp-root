@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="mfp-web:war">
+    <output-path>$PROJECT_DIR$/mfp-web/target</output-path>
+    <root id="archive" name="mfp-web-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="mfp-web:war exploded" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yr.net</groupId>
+    <artifactId>mfp-root</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>mfp-app</module>
+        <module>mfp-web</module>
+        <module>mfp-core</module>
+        <module>mfp-server</module>
+        <module>mfp-common</module>
+    </modules>
+
+    <properties>
+        <mfp-version>1.0-SNAPSHOT</mfp-version>
+        <java.version>1.8</java.version>
+        <lombok-version>1.16.10</lombok-version>
+        <spring-test-version>4.3.6.RELEASE</spring-test-version>
+        <junit-version>4.12</junit-version>
+        <fastjson-version>1.2.4</fastjson-version>
+        <commons-lang-version>2.6</commons-lang-version>
+        <guava-version>24.1-jre</guava-version>
+        <jackson-databind-version>2.9.5</jackson-databind-version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yr.net</groupId>
+                <artifactId>mfp-app</artifactId>
+                <version>${mfp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yr.net</groupId>
+                <artifactId>mfp-common</artifactId>
+                <version>${mfp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yr.net</groupId>
+                <artifactId>mfp-core</artifactId>
+                <version>${mfp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yr.net</groupId>
+                <artifactId>mfp-server</artifactId>
+                <version>${mfp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yr.net</groupId>
+                <artifactId>mfp-web</artifactId>
+                <version>${mfp-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <!-- 本地开发环境 -->
+            <id>development</id>
+            <properties>
+                <profiles.active>development</profiles.active>
+                <!--发布服务器的地址-->
+                <!-- <deploy.url>http://host:port/manager/conf</deploy.url>-->
+            </properties>
+            <activation>
+                <!-- 设置默认激活这个配置 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 发布环境 -->
+            <id>production</id>
+            <properties>
+                <profiles.active>production</profiles.active>
+                <!-- <deploy.url>http://host:port/manager/conf</deploy.url>-->
+            </properties>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+                <!--<deploy.url>http://host:port/manager/conf</deploy.url>-->
+            </properties>
+        </profile>
+    </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://server.dev.hqygou.com:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://server.dev.hqygou.com:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+        <repository>
+            <id>org.jboss.repository.releases</id>
+            <name>JBoss Maven Release Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>http://maven.springframework.org/release/org/springframework/</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
