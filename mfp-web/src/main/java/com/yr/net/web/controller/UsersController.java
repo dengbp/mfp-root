@@ -378,10 +378,6 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.GET,path = "/users/file/delete")
     @ResponseBody
     public AjaxResponse deleteFile(HttpServletRequest request,String idStr){
-   /*     Customer customer = (Customer) request.getSession().getAttribute("user");
-        if(customer==null){
-            return  new AjaxResponse(1,"session expire");
-        }*/
         if(StringUtils.isBlank(idStr)){
             AjaxResponse ajaxResponse = new AjaxResponse(1,"id不能为空");
             return ajaxResponse;
