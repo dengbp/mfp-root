@@ -25,6 +25,10 @@ public class BaseException extends RuntimeException{
         super();
     }
 
+    public BaseException(String message) {
+        super(message);
+    }
+
     public BaseException(String errorCode,String message) {
         super(MessageFormat.format("errorCode:{0},errorMessage:{1}", errorCode , message));
     }

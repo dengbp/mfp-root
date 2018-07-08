@@ -4,7 +4,6 @@ import com.yr.net.bean.AjaxResponse;
 import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
 import com.yr.net.entity.Customer;
-import com.yr.net.repository.AttachmentRepository;
 import com.yr.net.repository.CustomerRepository;
 import com.yr.net.service.UserService;
 import com.yr.net.util.AgeUtils;
@@ -53,8 +52,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public Customer saveOrUpdate(Customer customer) {
         Optional<Customer> optional = customerRepository.findByPhone(customer.getPhone());
-        if(optional.isPresent())
+        if(optional.isPresent()) {
             return optional.get();
+        }
         customer.setCreateTime(new Date());
         customer.setAge(0);
         customer.setLoginTimes(0);
@@ -89,6 +89,31 @@ public class UserServiceImpl implements UserService{
             return usersBean;
         }
         return null;
+    }
+
+    /**
+     * 根据用户id查询
+     * @param id
+     * @return 用户信息
+     */
+    @Override
+    public Customer findCustomerById(Long id) {
+        Optional optional = customerRepository.findById(id);
+        Customer customer = null;
+        if(optional.isPresent()) {
+            customer = (Customer) optional.get();
+        }
+        return customer;
+    }
+
+    /**
+     * 根据openid查用户
+     * @param openId
+     * @return 用户信息
+     */
+    @Override
+    public Customer findCustomerByOpenId(String openId) {
+        return customerRepository.findByOpenId(openId);
     }
 
     @Override
@@ -272,6 +297,29 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean checkFileMaxLimit(Long userId, Integer fileType) {
         return false;
+    }
+
+    @Override
+    public boolean checkInfo(String openId) {
+        Customer customer = customerRepository.findByOpenId(openId);
+        if(customer == null){
+            return false;
+        }
+        if(customer.getIdNumber()==null){
+            return false;
+        }
+        if (customer.getSex()==null){
+            return false;
+        }
+        if(customer.getEducation()==null){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Customer searchByOpenId(String openId) {
+        return customerRepository.findByOpenId(openId);
     }
 
 }

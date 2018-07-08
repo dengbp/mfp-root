@@ -1,6 +1,5 @@
-import com.yr.net.Application;
+import com.Application;
 import com.yr.net.bean.UsersBean;
-import com.yr.net.common.ArticleType;
 import com.yr.net.entity.Customer;
 import com.yr.net.repository.CustomerRepository;
 import com.yr.net.service.UserService;

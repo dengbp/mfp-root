@@ -12,7 +12,6 @@ import java.io.FileOutputStream;
  * CreateDate: 2018/6/14
  * </pre>
  * <p>
- *     fastdfs测试
  * </p>
  */
 public class FastDFSTest {

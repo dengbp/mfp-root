@@ -5,12 +5,10 @@ import com.yr.net.bean.AjaxResponse;
 import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
 import com.yr.net.entity.Customer;
-import com.yr.net.entity.Enroll;
 import com.yr.net.entity.WXCustomer;
 import com.yr.net.http.HttpUtils;
 import com.yr.net.service.UserService;
 import com.yr.net.service.impl.AttachmentService;
-import com.yr.net.service.impl.EnrollService;
 import com.yr.net.service.impl.WXCustomerService;
 import com.yr.net.util.RegexUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -22,21 +20,26 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * All rights Reserved, Designed By SEGI
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/5/29
+ * @Author:     dengbp
+ * @Date: 2018/5/29
  * </pre>
  * <p>
  *    用户控制器
@@ -55,8 +58,6 @@ public class UsersController {
     private static final String MSG_CONTENT_PREFIX = "【伊人网网络公司】您的验证码是:";
     @Resource
     UserService userService;
-    @Resource
-    EnrollService enrollService;
     @Resource
     AttachmentService attachmentService;
     @Resource
@@ -142,55 +143,6 @@ public class UsersController {
     }
 
     /**
-     * 活动报名
-     * @param request request
-     * @param phone phone
-     * @param code code
-     * @param codeTime codeTime
-     * @return 响应结果
-     */
-    @RequestMapping(method = RequestMethod.POST,path = "/register")
-    @ResponseBody
-    public AjaxResponse register(HttpServletRequest request,String phone,String code,String codeTime,String partyId){
-        log.info("请求参数:phone[{}],code[{}],codeTime[{}],partyId[{}]",phone,code,codeTime,partyId);
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(1);
-        String[] preCode = codeTime.split("_");
-        if (preCode.length != 3){
-            ajaxResponse.setMsg("先获取手机验证码");
-            return ajaxResponse;
-        }
-        if(!RegexUtils.checkMobile(phone)){
-            ajaxResponse.setMsg("手机号码格式不正确");
-            return ajaxResponse;
-        }
-        if (!StringUtils.equals(phone,preCode[2])){
-            ajaxResponse.setMsg("手机号码校验不通过");
-            return ajaxResponse;
-        }
-        String id = (String) request.getSession().getAttribute("code");
-        ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
-        long current = System.currentTimeMillis();
-        if(id.equals(code) && (current - new Long(preCode[1]).longValue())<1000 * 60 * 2){
-            ajaxResponse.setCode(0);
-            Customer customer = new Customer();
-            customer.setPhone(phone);
-            customer = userService.saveOrUpdate(customer);
-            Enroll enroll = new Enroll();
-            this.copyProperty(customer,enroll);
-            enroll.setPartyCode(partyId);
-            enroll.setPhone(phone);
-            if (enrollService.saveOrUpdate(enroll)){
-                ajaxResponse.setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,稍后客服人员将会与您联系确认" , partyId));
-            }else{
-                ajaxResponse.setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , partyId));
-
-            }
-        }
-        return ajaxResponse;
-    }
-
-    /**
      * 保存微信用户信息
      * @param wxCustomer
      * @return
@@ -212,6 +164,18 @@ public class UsersController {
     public AjaxResponse getCustomerByOpenId(String openId){
         UsersBean usersBean = userService.findByOpenId(openId);
         return new AjaxResponse(0,"获取用户信息成功",usersBean);
+    }
+
+    /**
+     * 根据openid取用户信息
+     * @param openId 微信用户唯一标识
+     * @return  AjaxResponse
+     */
+    @RequestMapping(method = RequestMethod.GET,path = "/checkInfo/openid")
+    @ResponseBody
+    public AjaxResponse checkInfo(String openId){
+        boolean b = userService.checkInfo(openId);
+        return new AjaxResponse(0,"获取用户信息成功",b);
     }
 
     /**
@@ -293,10 +257,6 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.POST,path = "/users/update")
     @ResponseBody
     public AjaxResponse updateUser(HttpServletRequest request,UsersBean usersBean){
-/*        Customer customer = (Customer) request.getSession().getAttribute("user");
-        if(customer==null){
-            return  new AjaxResponse(1,"session expire");
-        }*/
         return userService.updateUserById(usersBean);
     }
 
@@ -394,20 +354,4 @@ public class UsersController {
         return ajaxResponse;
     }
 
-    /**
-     * 复制对象属性
-     * @param customer 用户信息
-     * @param enroll 目标对象
-     */
-    private void copyProperty(Customer customer,Enroll enroll){
-        enroll.setCreateTime(new Date());
-        enroll.setIsAgreement(2);
-        enroll.setPayAll(2);
-        enroll.setPayDeposit(2);
-        log.info("customer:{}",customer);
-        if(customer.getSex() != null){
-            enroll.setSex(customer.getSex());
-        }
-        enroll.setWechatNickName(customer.getWeChartNickName());
-    }
 }

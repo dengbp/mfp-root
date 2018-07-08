@@ -30,7 +30,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>,JpaSpe
 
     List<Customer> findByIsOnline(boolean isOnline);
 
+    @Override
     Optional<Customer> findById(Long id);
+
+    /**
+     * 根据id或openid查用户
+     * @param id
+     * @param openId
+     * @return
+     */
+    Optional<Customer> findByIdOrOpenId(Long id,String openId);
 
     Optional<Customer> findByPhone(String phone);
 

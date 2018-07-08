@@ -1,5 +1,4 @@
-import com.yr.net.Application;
-import com.yr.net.entity.Industry;
+import com.Application;
 import com.yr.net.repository.IndustryRepository;
 import com.yr.net.service.impl.IndustryService;
 import org.junit.Test;
@@ -9,9 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * All rights Reserved, Designed By SEGI

@@ -17,10 +17,11 @@ import java.util.Date;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/6/20
+ * @Author:     dengbp
+ * @Date: 2018/6/20
  * </pre>
  * <p>
+ *     定时任务
  * </p>
  */
 @Component
@@ -39,7 +40,7 @@ public class DaemonTokenJob {
      */
     @Scheduled(fixedDelay = 1000 * SECOND)
     public void fixedDelayJob() {
-        logger.info("{}\tfixedDelay", dateFormat().format(new Date()));
+        logger.info("test task,do nothing,{}\tfixedDelay", dateFormat().format(new Date()));
     }
 
     /**

@@ -1,7 +1,5 @@
-import com.yr.net.Application;
-import com.yr.net.entity.Industry;
+import com.Application;
 import com.yr.net.entity.Interest;
-import com.yr.net.service.impl.IndustryService;
 import com.yr.net.service.impl.InterestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

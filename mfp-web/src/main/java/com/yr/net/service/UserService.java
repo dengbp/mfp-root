@@ -37,6 +37,20 @@ public interface UserService {
     UsersBean findById(Long id);
 
     /**
+     * 根据用户id查询
+     * @param id
+     * @return 用户信息
+     */
+    Customer findCustomerById(Long id);
+
+    /**
+     * 根据openid查用户
+     * @param openId
+     * @return 用户信息
+     */
+    Customer findCustomerByOpenId(String openId);
+
+    /**
      * 根据微信用户id查询
      * @param openId 微信用户id
      * @return 用户信息
@@ -125,6 +139,20 @@ public interface UserService {
      * @return boolean
      */
     boolean checkFileMaxLimit(Long userId,Integer fileType);
+
+    /**
+     * 检查用户信息是否完善
+     * @param openId 用户openid
+     * @return true:已经完善;false:未完善
+     */
+    boolean checkInfo(String openId);
+
+    /**
+     * 根据openid查用户信息
+     * @param openId
+     * @return
+     */
+    Customer searchByOpenId(String openId);
 
 
 

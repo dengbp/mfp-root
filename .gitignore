@@ -1,0 +1,17 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/vcs.xml
+.idea/workspace.xml
+mfp-app/src/
+mfp-app/target/
+mfp-common/.idea/inspectionProfiles/
+mfp-common/target/
+mfp-core/src/
+mfp-core/target/
+mfp-server/src/
+mfp-server/target/
+mfp-web/src/main/resources/static/
+mfp-web/src/main/resources/templates/
+mfp-web/src/main/webapp/
+mfp-web/target/
+yrnet/

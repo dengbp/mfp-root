@@ -1,5 +1,6 @@
 package com.yr.net.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,20 +23,43 @@ import java.util.Date;
  *     参加活动报名表
  * </p>
  */
-@Setter
-@Getter
+@Data
 @Entity(name="yr_enroll")
 public class Enroll implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date createTime;//报名时间
-    private String partyCode;//参加的活动编号
+    /**
+     * 报名时间
+     */
+    private Date createTime;
+    /**
+     * 参加的活动编号
+     */
+    private String partyCode;
+    private Long partyId;
+    private Long userId;
+    private String openId;
     private String phone;
-    private Integer sex;//1男2女
-    private String wechatNickName;//微信昵称
-    private Integer payDeposit;//是否已付定金 1是2否
-    private Integer payAll;//是否已全部交报名费 1是2否
+    /**
+     * 1男2女
+     */
+    private Integer sex;
+    /**
+     * 微信昵称
+     */
+    private String wechatNickName;
+    /**
+     * 是否已付定金 1是2否
+     */
+    private Integer payDeposit;
+    /**
+     * 是否已全部交报名费 1是2否
+     */
+    private Integer payAll;
     private String remarks;//备注
-    private int isAgreement;//是否毁约  1是2否3待定
+    /**
+     * 是否毁约  1是2否3待定
+     */
+    private int isAgreement;
 }

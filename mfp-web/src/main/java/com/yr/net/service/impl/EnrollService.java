@@ -15,8 +15,8 @@ import java.util.Optional;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/5/30
+ * @Author:     dengbp
+ * @Date: 2018/5/30
  * </pre>
  * <p>
  *     活动报名服务类
@@ -30,8 +30,9 @@ public class EnrollService {
 
     public boolean saveOrUpdate(Enroll enroll) {
         Optional<Enroll> optional = enrollRepository.findByPartyCodeAndPhone(enroll.getPartyCode(),enroll.getPhone());
-        if(optional.isPresent())
+        if(optional.isPresent()){
             return false;
+        }
         enrollRepository.save(enroll);
         return true;
     }

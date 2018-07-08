@@ -23,6 +23,8 @@ public class DateTest {
 
         int age = AgeUtils.getAgeByDate(date);
         System.out.println(age);
+
+
         System.out.println(date.getTime());
                 Preconditions.checkNotNull(args);
     }
