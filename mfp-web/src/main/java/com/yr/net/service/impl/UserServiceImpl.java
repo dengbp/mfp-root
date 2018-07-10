@@ -314,6 +314,9 @@ public class UserServiceImpl implements UserService{
         if(customer.getEducation()==null){
             return false;
         }
+        if(StringUtils.isBlank(customer.getLoverRequire())){
+            return false;
+        }
         return true;
     }
 
