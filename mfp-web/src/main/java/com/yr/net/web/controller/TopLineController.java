@@ -61,6 +61,15 @@ public class TopLineController {
         return ajaxResponse;
     }
 
+    @RequestMapping(method = RequestMethod.GET,path = "/signed")
+    public AjaxResponse signed(Long userId,String openId){
+        if(userId==null && StringUtils.isBlank(openId)){
+            return new AjaxResponse(1,"openId和userId不能为空");
+        }
+        AjaxResponse ajaxResponse = new AjaxResponse(0,"请求成功",topLineService.signed(userId,openId));
+        return ajaxResponse;
+    }
+
     /**
      * 属性赋值
      * @param customer customer

@@ -3,6 +3,7 @@ package com.yr.net.web.controller;
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.service.impl.CharacterService;
 import com.yr.net.service.impl.GoodsService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -34,10 +37,34 @@ public class GoodsController {
     @RequestMapping(method = RequestMethod.GET,path = "/goods/list")
     @ResponseBody
     public AjaxResponse goodsList(@RequestParam("typeId") Long typeId){
-        log.info("call goodsList method...");
+        log.info("call goodsList method typeId[{}]...",typeId);
+        if (typeId==null){
+            return new AjaxResponse(1,"typeId is blank");
+        }
         AjaxResponse ajaxResponse = new AjaxResponse();
         ajaxResponse.setCode(0);
         ajaxResponse.setResult(goodsService.findByTypeId(typeId));
+        ajaxResponse.setMsg("成功");
+        return ajaxResponse;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,path = "/goods/list/typeIds")
+    @ResponseBody
+    public AjaxResponse goodsList(@RequestParam("typeIds") String typeIds){
+        log.info("call goodsList method  typeIds[{}]...",typeIds);
+        if (StringUtils.isBlank(typeIds)){
+            return new AjaxResponse(1,"typeIds is blank");
+        }
+        String[] strings = typeIds.split(",");
+        Long[] longs = new Long[strings.length];
+        List<String> list = Arrays.asList(strings);
+        list.stream().forEach(e -> {
+            int index = list.indexOf(e);
+            longs[index] = Long.valueOf(strings[index]);
+        });
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        ajaxResponse.setCode(0);
+        ajaxResponse.setResult(goodsService.findByIdTypeIds(longs));
         ajaxResponse.setMsg("成功");
         return ajaxResponse;
     }

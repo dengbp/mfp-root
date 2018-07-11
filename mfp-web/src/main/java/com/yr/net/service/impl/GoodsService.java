@@ -27,7 +27,23 @@ public class GoodsService {
     @Resource
     private GoodsRepository goodsRepository;
 
+    /**
+     * 根据商品类型查商品信息
+     * @param typeId 商品类型id
+     * @return 商品信息
+     */
     public List<Goods> findByTypeId(Long typeId){
         return goodsRepository.findByTypeId(typeId);
     }
+
+    /**
+     * 根据商品类型查商品信息
+     * @param typeIds 商品类型id
+     * @return 商品信息
+     */
+    public List<Goods> findByIdTypeIds(Long[] typeIds){
+        return goodsRepository.findByTypeIdIn(typeIds);
+    }
+
+
 }

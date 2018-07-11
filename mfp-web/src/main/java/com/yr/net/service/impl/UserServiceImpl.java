@@ -222,6 +222,7 @@ public class UserServiceImpl implements UserService{
             Customer customer = (Customer)optional.get();
             String IdNumber = customer.getIdNumber();
             String password = customer.getPassword();
+            Integer sex = customer.getSex();
             BeanUtils.copyProperties(usersBean,customer);
             if(StringUtils.isNotBlank(IdNumber)){
                 customer.setIdNumber(IdNumber);
@@ -234,6 +235,9 @@ public class UserServiceImpl implements UserService{
             }
             if (StringUtils.isNotBlank(password)){
                 customer.setPassword(password);
+            }
+            if (sex!=null && (sex.intValue()==1||sex.intValue()==2)){
+                customer.setSex(sex);
             }
             customer.setUpdateTime(new Date());
             customerRepository.save(customer);

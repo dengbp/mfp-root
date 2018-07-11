@@ -98,7 +98,7 @@ public class UsersController {
     }
 
     /**
-     * 登录
+     * 绑定、登录
      * @param request
      * @param phone 手机
      * @param code 验证码
@@ -167,7 +167,7 @@ public class UsersController {
     }
 
     /**
-     * 根据openid取用户信息
+     * 根据openid检查资料是否完善
      * @param openId 微信用户唯一标识
      * @return  AjaxResponse
      */

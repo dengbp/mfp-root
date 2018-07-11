@@ -4,6 +4,7 @@ import com.yr.net.entity.Follow;
 import com.yr.net.entity.Goods;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -23,9 +24,16 @@ public interface GoodsRepository extends JpaRepository<Goods, Long>,JpaSpecifica
 
     /**
      * 根据商品类型查商品信息
-     * @param typeId 商品类型不d
+     * @param typeId 商品类型id
      * @return 商品信息
      */
     List<Goods> findByTypeId(Long typeId);
+
+    /**
+     * 根据商品类型查商品信息
+     * @param typeIds 商品类型id
+     * @return 商品信息
+     */
+    List<Goods> findByTypeIdIn(Long[] typeIds);
 
 }

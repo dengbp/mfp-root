@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -28,5 +29,10 @@ public class TopLineService {
 
     public void save(TopLine topLine){
         topLineRepository.save(topLine);
+    }
+
+    public boolean signed(Long userId,String openId){
+        List<TopLine> lines = topLineRepository.findByUserIdOrOpenId(userId,openId);
+        return lines.isEmpty()?false:true;
     }
 }

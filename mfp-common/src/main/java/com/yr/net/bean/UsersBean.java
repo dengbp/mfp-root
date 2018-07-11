@@ -46,6 +46,7 @@ public class UsersBean {
     private Integer state;//1:未婚;2:离异;3:丧偶
     private Integer loveTimes;//感情经历(1:代表一断，2：代表两断,...)
     private String birthday;//生日
+    private Integer sex;//性别 1:男;2:女
 
 
 }
