@@ -3,6 +3,8 @@ package com.yr.net.service;
 import com.yr.net.entity.OrderEntity;
 import com.yr.net.model.OrderReq;
 
+import java.util.List;
+
 /**
  * 订单Service
  */
@@ -24,4 +26,11 @@ public interface OrderService {
      * @return
      */
     OrderEntity findByOrderId(String orderId);
+
+    /**
+     * 根据用户id取定单
+     * @param userId
+     * @return 订单信息
+     */
+    List<OrderEntity> findByUserId(Integer userId);
 }

@@ -36,4 +36,11 @@ public interface GoodsRepository extends JpaRepository<Goods, Long>,JpaSpecifica
      */
     List<Goods> findByTypeIdIn(Long[] typeIds);
 
+    /**
+     * 根据商品id取商品信息
+     * @param ids id
+     * @return 商品信息列表
+     */
+    List<Goods> findByIdIn(Long[] ids);
+
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -43,6 +44,29 @@ public class GoodsService {
      */
     public List<Goods> findByIdTypeIds(Long[] typeIds){
         return goodsRepository.findByTypeIdIn(typeIds);
+    }
+
+    /**
+     * 根据商品id取商品信息
+     * @param id 商品id
+     * @return 商品信息
+     */
+    public Goods findById(Long id){
+        Optional optional = goodsRepository.findById(id);
+        if (optional.isPresent()){
+            return (Goods)optional.get();
+        }
+        return null;
+    }
+
+    /**
+     * 根据商品ids取商品信息
+     * @param ids 商品id
+     * @return 商品信息
+     */
+    public List<Goods> findByIds(List<Long> ids){
+        Long[] longs =ids.stream().toArray(Long[]::new);
+        return goodsRepository.findByIdIn(longs);
     }
 
 

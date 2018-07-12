@@ -15,6 +15,7 @@ import weixin.popular.api.MessageAPI;
 import weixin.popular.bean.message.templatemessage.TemplateMessage;
 import weixin.popular.bean.message.templatemessage.TemplateMessageItem;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -47,7 +48,7 @@ public class WxMessageServiceImpl implements WxMessageService {
         //商品名称
         messageDataMap.put("keyword2", genTemplateItem(mapData.get("attach")));
         //订单金额
-        messageDataMap.put("keyword3", genTemplateItem(mapData.get("total_fee")));
+        messageDataMap.put("keyword3", genTemplateItem(Long.parseLong(mapData.get("total_fee"))/100+""));
         //订单号
         messageDataMap.put("keyword4", genTemplateItem(orderId));
         //商家

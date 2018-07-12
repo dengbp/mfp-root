@@ -38,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setOrderStat((byte) 1); //待支付
         orderEntity.setOrderTime(new Date());
         orderEntity.setOrderPay((byte) 1); //微信支付
+        orderEntity.setUserId(orderReq.getCustId());
         return orderRepository.save(orderEntity);
     }
 
@@ -66,6 +67,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return orderEntityList.get(0);
     }
+
+    @Override
+    public List<OrderEntity> findByUserId(Integer userId) {
+        return orderRepository.findByUserId(userId);
+}
 
 
 }
