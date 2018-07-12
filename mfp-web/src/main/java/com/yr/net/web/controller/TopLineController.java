@@ -48,9 +48,6 @@ public class TopLineController {
         if(StringUtils.isBlank(topLine.getOpenId()) && topLine.getUserId()==null){
             return new AjaxResponse(1,"用户id不能为空");
         }
-        if(StringUtils.isBlank(topLine.getRealName())){
-            return new AjaxResponse(1,"姓名不能为空");
-        }
         if(StringUtils.isBlank(topLine.getOpenId())){
             return new AjaxResponse(1,"openId不能为空");
         }
