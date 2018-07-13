@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService{
             ajaxResponse.setMsg("用户名称为空");
             return ajaxResponse;
         }
-        if(usersBean.getHeight()==null && usersBean.getHeight()<=0){
+        if(usersBean.getHeight()==null || usersBean.getHeight()<=0){
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("身高为空");
             return ajaxResponse;
@@ -239,6 +239,11 @@ public class UserServiceImpl implements UserService{
         if(usersBean.getSex().intValue()!=1 && usersBean.getSex().intValue()!=2){
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("性别为空");
+            return ajaxResponse;
+        }
+        if(usersBean.getState()==null){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("婚姻状况为空");
             return ajaxResponse;
         }
         if(usersBean.getState().intValue()!=1 && usersBean.getState().intValue()!=2 && usersBean.getState().intValue()!=3){
