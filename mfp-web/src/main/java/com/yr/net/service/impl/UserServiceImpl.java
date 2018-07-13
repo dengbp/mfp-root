@@ -207,12 +207,53 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    /**
+     * 用户编辑
+     * @param usersBean usersBean
+     * @return AjaxResponse 更新结果
+     */
     @Override
     public AjaxResponse updateUserById(UsersBean usersBean) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         if (usersBean.getId()==null){
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("用户id为空");
+            return ajaxResponse;
+        }
+        if(StringUtils.isBlank(usersBean.getUserName())){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("用户名称为空");
+            return ajaxResponse;
+        }
+        if(usersBean.getHeight()==null && usersBean.getHeight()<=0){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("身高为空");
+            return ajaxResponse;
+        }
+
+        if(usersBean.getSex()==null){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("性别为空");
+            return ajaxResponse;
+        }
+        if(usersBean.getSex().intValue()!=1 && usersBean.getSex().intValue()!=2){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("性别为空");
+            return ajaxResponse;
+        }
+        if(usersBean.getState().intValue()!=1 && usersBean.getState().intValue()!=2 && usersBean.getState().intValue()!=3){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("婚姻状况为空");
+            return ajaxResponse;
+        }
+        if(StringUtils.isBlank(usersBean.getLoverRequire())){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("征友要求为空");
+            return ajaxResponse;
+        }
+        if(usersBean.getEducation()==null){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("教育程度为空");
             return ajaxResponse;
         }
         ajaxResponse.setCode(0);
@@ -227,7 +268,12 @@ public class UserServiceImpl implements UserService{
             if(StringUtils.isNotBlank(IdNumber)){
                 customer.setIdNumber(IdNumber);
             }else{
-                if (usersBean.getIdNumber() != null && !RegexUtils.checkIDNumber(usersBean.getIdNumber())){
+                if(StringUtils.isBlank(usersBean.getIdNumber())){
+                    ajaxResponse.setCode(1);
+                    ajaxResponse.setMsg("身份证号码为空");
+                    return ajaxResponse;
+                }else
+                if (!RegexUtils.checkIDNumber(usersBean.getIdNumber())){
                     ajaxResponse.setCode(1);
                     ajaxResponse.setMsg("身份证号码有误");
                     return ajaxResponse;

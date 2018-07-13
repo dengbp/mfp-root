@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/mfp-root.iml" filepath="$PROJECT_DIR$/mfp-root.iml" />
       <module fileurl="file://$PROJECT_DIR$/mfp-server/mfp-server.iml" filepath="$PROJECT_DIR$/mfp-server/mfp-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/mfp-web/mfp-web.iml" filepath="$PROJECT_DIR$/mfp-web/mfp-web.iml" />
-      <module fileurl="file://$PROJECT_DIR$/yrnet/yrnet.iml" filepath="$PROJECT_DIR$/yrnet/yrnet.iml" />
     </modules>
   </component>
 </project>
