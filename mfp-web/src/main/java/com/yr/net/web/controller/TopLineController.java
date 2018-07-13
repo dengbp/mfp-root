@@ -76,5 +76,6 @@ public class TopLineController {
         topLine.setCreateTime(new Date());
         topLine.setUserPhone(customer.getPhone());
         topLine.setUserId(customer.getId());
+        topLine.setSex(customer.getSex());
     }
 }
