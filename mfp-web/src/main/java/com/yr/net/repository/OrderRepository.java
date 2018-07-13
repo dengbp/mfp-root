@@ -20,7 +20,8 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Integer> {
     /**
      * 根据订单id取信息
      * @param userId
+     * @param orderStat 支付状态
      * @return 订单信息
      */
-    public List<OrderEntity> findByUserId(Integer userId);
+    public List<OrderEntity> findByUserIdAndOrderStat(Integer userId,Byte orderStat);
 }

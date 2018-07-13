@@ -30,7 +30,8 @@ public interface OrderService {
     /**
      * 根据用户id取定单
      * @param userId
+     * @param state 订单状态
      * @return 订单信息
      */
-    List<OrderEntity> findByUserId(Integer userId);
+    List<OrderEntity> findByUserId(Integer userId,Byte state);
 }

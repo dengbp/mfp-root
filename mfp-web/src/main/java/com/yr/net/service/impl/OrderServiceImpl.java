@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEntity updateState(String orderId) {
         OrderEntity updateOrder = this.findByOrderId(orderId);
-        updateOrder.setOrderStat((byte) 2); //
+        updateOrder.setOrderStat((byte) 2);
         updateOrder.setPayTime(new Date());
         return orderRepository.save(updateOrder);
     }
@@ -69,8 +69,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderEntity> findByUserId(Integer userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderEntity> findByUserId(Integer userId,Byte state) {
+        return orderRepository.findByUserIdAndOrderStat(userId,state);
 }
 
 

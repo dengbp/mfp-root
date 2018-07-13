@@ -53,16 +53,16 @@ public class TopLineService {
         if(lines.isEmpty()){
             return state;
         }
-        List<OrderEntity> orderEntities = orderService.findByUserId(new Integer(userId.longValue()+""));
-        if (orderEntities.isEmpty()){
-            return state = 1;
-        }
-        List<Long> goodsIds = new ArrayList<>();
-        orderEntities.forEach(orderEntity -> goodsIds.add(new Long(orderEntity.getOrderGoodId())));
-        List<Goods> goods = goodsService.findByIds(goodsIds);
-        Optional optional = goods.stream().filter(goods1 -> (goods1.getTypeId().longValue()==GoodsType.TOPLINE.getId().intValue()) || (goods1.getTypeId().longValue()==GoodsType.MEMBER.getId().intValue())).findFirst();
-        if (optional.isPresent()){
-            state = 2;
+        state = 1;
+        List<OrderEntity> orderEntities = orderService.findByUserId(new Integer(userId.longValue()+""),Byte.valueOf("2"));
+        if (!orderEntities.isEmpty()){
+            List<Long> goodsIds = new ArrayList<>();
+            orderEntities.forEach(orderEntity -> goodsIds.add(new Long(orderEntity.getOrderGoodId())));
+            List<Goods> goods = goodsService.findByIds(goodsIds);
+            Optional optional = goods.stream().filter(goods1 -> (goods1.getTypeId().longValue()==GoodsType.TOPLINE.getId().intValue()) || (goods1.getTypeId().longValue()==GoodsType.MEMBER.getId().intValue())).findFirst();
+            if (optional.isPresent()){
+                state = 2;
+            }
         }
         return state;
     }
