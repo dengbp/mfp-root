@@ -21,8 +21,8 @@ import java.util.stream.Stream;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/5/29
+ * @Author:     dengbp
+ * @Date: 2018/5/29
  * </pre>
  * <p>
  *    行业职务控制器
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 @Controller
 public class IndustryController {
     static Logger logger = LoggerFactory.getLogger(IndustryController.class);
-    @Resource
+    //@Resource
     private IndustryService industryService;
 
     @RequestMapping(method = RequestMethod.GET,path = "/industry/list")

@@ -6,10 +6,13 @@ import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
 import com.yr.net.entity.Customer;
 import com.yr.net.entity.WXCustomer;
+import com.yr.net.exception.UnauthorizedException;
 import com.yr.net.http.HttpUtils;
+import com.yr.net.model.UserInfoReq;
 import com.yr.net.service.UserService;
 import com.yr.net.service.impl.AttachmentService;
 import com.yr.net.service.impl.WXCustomerService;
+import com.yr.net.util.JWTUtil;
 import com.yr.net.util.RegexUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -20,10 +23,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +62,7 @@ public class UsersController {
     AttachmentService attachmentService;
     @Resource
     WXCustomerService wxCustomerService;
+    private static long EXPIRE = 1000 * 60 * 2;
 
     /**
      * 获取验证码
@@ -98,7 +99,31 @@ public class UsersController {
     }
 
     /**
-     * 绑定、登录
+     * 用户登录
+     * @param userInfoReq 用户信息
+     * @return 登录结果信息
+     */
+    @PostMapping("/signIn")
+    @ResponseBody
+    public AjaxResponse login(HttpServletRequest request,@RequestBody UserInfoReq userInfoReq) {
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        //暂时注释
+   /*     if(!this.validate(request,ajaxResponse,userInfoReq)){
+            ajaxResponse.setCode(1);
+            return ajaxResponse;
+        }*/
+        UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
+        if (usersBean != null) {
+            return new AjaxResponse(200, "Login success", JWTUtil.sign(userInfoReq.getPhone(), userInfoReq.getMessageCode()));
+        } else {
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("用户不存在");
+            return ajaxResponse;
+        }
+    }
+
+    /**
+     * 绑定
      * @param request
      * @param phone 手机
      * @param code 验证码
@@ -106,40 +131,65 @@ public class UsersController {
      * @param role 角色。0：相亲；1：红娘
      * @return 登录结果
      */
-    @RequestMapping(method = RequestMethod.POST,path = "/login")
+    @PostMapping("/login")
     @ResponseBody
     public AjaxResponse login(HttpServletRequest request,String phone,String code,String codeTime,Integer role,String openId){
         log.info("请求参数:phone[{}],code[{}],codeTime[{}],role[{}]",phone,code,codeTime,role);
         AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(1);
-        String[] preCode = codeTime.split("_");
+        UserInfoReq userInfoReq = new UserInfoReq(phone,code,codeTime);
+        if(!this.validate(request,ajaxResponse,userInfoReq)){
+            ajaxResponse.setCode(1);
+            return ajaxResponse;
+        }
+        ajaxResponse.setCode(0);
+        Customer customer = new Customer();
+        customer.setPhone(phone);
+        customer.setRole(role);
+        customer.setOpenId(openId);
+        customer = userService.saveOrUpdate(customer);
+        ajaxResponse.setResult(customer);
+        ajaxResponse.setMsg("绑定成功");
+        request.getSession().setAttribute("user",customer);
+        return ajaxResponse;
+    }
+
+    /**
+     * 用户信息校验
+     * @param request request
+     * @param ajaxResponse ajaxResponse
+     * @param userInfoReq userInfoReq
+     * @return ajaxResponse
+     */
+    private boolean validate(HttpServletRequest request,AjaxResponse ajaxResponse,UserInfoReq userInfoReq){
+        String[] preCode = userInfoReq.getCodeTime().split("_");
+        boolean validate = true;
         if (preCode.length != 3){
             ajaxResponse.setMsg("先获取手机验证码");
-            return ajaxResponse;
+            validate = false;
+            return validate;
         }
-        if(!RegexUtils.checkMobile(phone)){
+        if(!RegexUtils.checkMobile(userInfoReq.getPhone())){
             ajaxResponse.setMsg("手机号码格式不正确");
-            return ajaxResponse;
+            validate = false;
+            return validate;
         }
-        if (!StringUtils.equals(phone,preCode[2])){
+        /**
+         * 取验证码的手机号与登录手机号不相同
+         */
+        if (!StringUtils.equals(userInfoReq.getPhone(),preCode[2])){
             ajaxResponse.setMsg("手机号码校验不通过");
-            return ajaxResponse;
+            validate = false;
+            return validate;
         }
         String id = (String) request.getSession().getAttribute("code");
         ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
         long current = System.currentTimeMillis();
-        if(id.equals(code) && (current - new Long(preCode[1]).longValue())<1000 * 60 * 2){
-            ajaxResponse.setCode(0);
-            Customer customer = new Customer();
-            customer.setPhone(phone);
-            customer.setRole(role);
-            customer.setOpenId(openId);
-            customer = userService.saveOrUpdate(customer);
-            ajaxResponse.setResult(customer);
-            ajaxResponse.setMsg("登录成功");
-            request.getSession().setAttribute("user",customer);
+        if(!id.equals(userInfoReq.getMessageCode()) || (current - new Long(preCode[1]).longValue())>EXPIRE){
+            ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
+            validate = false;
+            return validate;
         }
-        return ajaxResponse;
+        return validate;
     }
 
     /**

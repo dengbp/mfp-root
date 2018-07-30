@@ -16,8 +16,8 @@ import java.util.Optional;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/5/28
+ * @Author:     dengbp
+ * @Date: 2018/5/28
  * </pre>
  * <p>
  *     行业服务类

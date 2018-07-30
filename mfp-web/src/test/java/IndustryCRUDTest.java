@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Rollback(value = false)
 public class IndustryCRUDTest {
-    @Autowired
-    private IndustryService industryService;
+//    @Autowired
+//    private IndustryService industryService;
 
     @Autowired
     private IndustryRepository industryRepository;

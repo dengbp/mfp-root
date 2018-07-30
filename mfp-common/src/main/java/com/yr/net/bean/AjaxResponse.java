@@ -1,5 +1,6 @@
 package com.yr.net.bean;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +16,7 @@ import lombok.Setter;
  * <p>
  * </p>
  */
-@Setter
-@Getter
+@Data
 public class AjaxResponse {
 
     /**
