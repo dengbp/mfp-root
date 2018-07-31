@@ -88,11 +88,11 @@ public class PartyController {
          * 是否已支付 0：未支付；1:已支付
          */
         enroll.setPayDeposit(0);
-        enroll.setPartyId(joinPartyReq.getPartyId());
+        enroll.setPartyId(joinPartyReq.getPartyId().intValue());
         enroll.setPartyCode(joinPartyReq.getPartyCode());
         enroll.setPhone(customer.getPhone());
         enroll.setOpenId(joinPartyReq.getOpenId());
-        enroll.setUserId(joinPartyReq.getUserId());
+        enroll.setUserId(joinPartyReq.getUserId().intValue());
         enroll.setSex(customer.getSex());
         enroll.setWechatNickName(customer.getWeChartNickName());
         logger.info("enroll:{}",enroll);

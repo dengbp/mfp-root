@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="mybatisCommunitybusiness" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+            <property name="searchString" value="Example$"/>
+            <property name="replaceString" value="Criteria"/>
+        </plugin>
+
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection
+                driverClass="com.mysql.jdbc.Driver"
+                connectionURL="jdbc:mysql://193.112.214.225/friends_party?characterEncoding=UTF-8" userId="yiren"
+                password="yiren123456!"/>
+
+        <!--默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 和-->
+        <!--NUMERIC 类型解析为java.math.BigDecimal-->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.yr.net.entity" targetProject="src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--dao生成配置 -->
+        <!--<sqlMapGenerator targetPackage="com.segi.uhomecp.lease.dao" targetProject="src\main\resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.segi.uhomecp.lease.dao" targetProject="src\main\java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="rootInterface" value="com.segi.uhomecp.common.dao.AbstractMapperDao"/>
+        </javaClientGenerator>-->
+
+       <table schema="friends_party" tableName="yr_party_apply" domainObjectName="PartyApply"/>
+       <table schema="friends_party" tableName="yr_party_update_record" domainObjectName="PartyUpdateRecord"/>
+       <table schema="friends_party" tableName="yr_enroll" domainObjectName="Enroll"/>
+
+    </context>
+</generatorConfiguration>

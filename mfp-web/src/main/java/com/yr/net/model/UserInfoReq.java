@@ -24,6 +24,10 @@ public class UserInfoReq {
     private String phone;
 
     private String messageCode;
+    /**
+     * 短信验证码有效期信息
+     */
+    private String codeTime;
 
 
     public UserInfoReq() {
@@ -39,11 +43,6 @@ public class UserInfoReq {
         this.username = username;
         this.password = password;
     }
-
-    /**
-     * 短信验证码有效期信息
-     */
-    private String codeTime;
 
 
 }
