@@ -2,8 +2,8 @@ package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.entity.Industry;
-import com.yr.net.service.impl.IndustryService;
-import org.apache.commons.lang.StringUtils;
+import com.yr.net.service.IndustryService1;
+import com.yr.net.service.impl.IndustryService1Impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -31,8 +29,8 @@ import java.util.stream.Stream;
 @Controller
 public class IndustryController {
     static Logger logger = LoggerFactory.getLogger(IndustryController.class);
-    //@Resource
-    private IndustryService industryService;
+    @Resource
+    private IndustryService1 industryService1;
 
     @RequestMapping(method = RequestMethod.GET,path = "/industry/list")
     @ResponseBody
@@ -40,7 +38,7 @@ public class IndustryController {
         AjaxResponse ajaxResponse = new AjaxResponse();
         ajaxResponse.setCode(0);
         ajaxResponse.setMsg("成功");
-        List<Industry> industryList = industryService.getIndustry();
+        List<Industry> industryList = industryService1.getIndustry();
         ajaxResponse.setResult(industryList);
         return ajaxResponse;
     }
@@ -56,7 +54,7 @@ public class IndustryController {
         }
         ajaxResponse.setCode(0);
         ajaxResponse.setMsg("成功");
-        ajaxResponse.setResult(industryService.getJobTitle(type));
+        ajaxResponse.setResult(industryService1.getJobTitle(type));
         return ajaxResponse;
     }
 }

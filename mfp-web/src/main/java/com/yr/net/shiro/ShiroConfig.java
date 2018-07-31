@@ -1,5 +1,5 @@
 package com.yr.net.shiro;
-import com.yr.net.shiro.MyRealm;
+
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -7,6 +7,8 @@ import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
+import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
@@ -54,9 +56,10 @@ public class ShiroConfig {
         return manager;
     }
 
-    @Bean
+    @Bean("shiroFilterFactoryBean")
     public ShiroFilterFactoryBean factory(DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean factoryBean = new ShiroFilterFactoryBean();
+
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<>();
         filterMap.put("jwt", new JWTFilter());
@@ -65,25 +68,24 @@ public class ShiroConfig {
         factoryBean.setUnauthorizedUrl("/401");
         //拦截器.
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-        //暂时先不拦截
-       /* filterChainDefinitionMap.put("/edit", "jwt, perms[edit]");
+        filterChainDefinitionMap.put("/edit", "jwt, perms[edit]");
         filterChainDefinitionMap.put("/admin/hello", "jwt, roles[admin]");
-        filterChainDefinitionMap.put("/annotation/**", "jwt");*/
+        filterChainDefinitionMap.put("/annotation/**", "jwt");
         filterChainDefinitionMap.put("/**", "anon");
         factoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return factoryBean;
     }
 
-//    @Bean
-//    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
-//        DefaultShiroFilterChainDefinition chain = new DefaultShiroFilterChainDefinition();
-//        // 由于demo1展示统一使用注解做访问控制，所以这里配置所有请求路径都可以匿名访问
-//        chain.addPathDefinition("/**", "anon"); // all paths are managed via annotations
-//        // 这另一种配置方式。但是还是用上面那种吧，容易理解一点。
-//        // or allow basic authentication, but NOT require it.
-//        // chainDefinition.addPathDefinition("/**", "authcBasic[permissive]");
-//        return chain;
-//    }
+    @Bean
+    public ShiroFilterChainDefinition shiroFilterChainDefinition() {
+        DefaultShiroFilterChainDefinition chain = new DefaultShiroFilterChainDefinition();
+        // 由于demo1展示统一使用注解做访问控制，所以这里配置所有请求路径都可以匿名访问
+        chain.addPathDefinition("/**", "anon"); // all paths are managed via annotations
+        // 这另一种配置方式。但是还是用上面那种吧，容易理解一点。
+        // or allow basic authentication, but NOT require it.
+        // chainDefinition.addPathDefinition("/**", "authcBasic[permissive]");
+        return chain;
+    }
 
     @Bean
     protected CacheManager cacheManager() {
@@ -91,13 +93,14 @@ public class ShiroConfig {
     }
 
     /**
-     * 添加注解支持(注解权限配置，需要cookie支持，后端需要session功能开启)*/
+    * 添加注解支持(注解权限配置，需要cookie支持，后端需要session功能开启)*/
     @Bean
     @DependsOn("lifecycleBeanPostProcessor")
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
         /**
          * 使用权限注解生效
+         * 强制使用cglib，防止重复代理和可能引起代理出错的问题
          */
         creator.setProxyTargetClass(true);
         return new DefaultAdvisorAutoProxyCreator();

@@ -18,6 +18,7 @@
       <module name="mfp-common" target="1.8" />
       <module name="mfp-core" target="1.8" />
       <module name="mfp-net" target="1.8" />
+      <module name="mfp-oauth" target="1.8" />
       <module name="mfp-root" target="1.8" />
       <module name="mfp-server" target="1.8" />
       <module name="mfp-web" target="1.8" />

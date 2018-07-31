@@ -31,6 +31,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/ddfdf/pom.xml" />
+        <option value="$PROJECT_DIR$/mfp-oauth/pom.xml" />
         <option value="$PROJECT_DIR$/mfpcore/pom.xml" />
       </set>
     </option>

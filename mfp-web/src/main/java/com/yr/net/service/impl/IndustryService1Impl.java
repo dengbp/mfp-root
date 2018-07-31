@@ -24,8 +24,8 @@ import java.util.Optional;
  * </p>
  */
 @Service
-public class IndustryService {
-    Logger logger = LoggerFactory.getLogger(IndustryService.class);
+public class IndustryService1Impl implements com.yr.net.service.IndustryService1{
+    Logger logger = LoggerFactory.getLogger(IndustryService1Impl.class);
     @Resource
     private IndustryRepository industryRepository;
 
@@ -35,6 +35,7 @@ public class IndustryService {
      * @param type 行业类型
      * @return 职位信息列表
      */
+    @Override
     public List<Industry> getJobTitle(Integer type){
         return industryRepository.findByType(type);
     }
@@ -44,6 +45,7 @@ public class IndustryService {
      * @return 去重后的行业列表
      */
     @Transactional
+    @Override
     public List<Industry> getIndustry(){
         return industryRepository.findAllByIndustryQueryAndStream();
     }
@@ -53,6 +55,7 @@ public class IndustryService {
      * @param id id
      * @return 职业信息
      */
+    @Override
     public Industry queryIndustryById(Long id){
         Optional optional = industryRepository.findById(id);
         if(optional.isPresent()){

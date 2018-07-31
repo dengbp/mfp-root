@@ -1,6 +1,5 @@
 import com.Application;
 import com.yr.net.repository.IndustryRepository;
-import com.yr.net.service.impl.IndustryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

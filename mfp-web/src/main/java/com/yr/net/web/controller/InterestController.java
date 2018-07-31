@@ -17,8 +17,8 @@ import java.lang.reflect.Method;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/5/29
+ * @Author:     dengbp
+ * @Date: 2018/5/29
  * </pre>
  * <p>
  *     爱好控制器

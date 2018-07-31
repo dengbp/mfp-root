@@ -29,6 +29,6 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long>,Jp
 
     public Integer countByBusinessIdAndFileType(Long businessId,Integer fileType);
 
-    @Transactional
-    public void deleteById(Long id);
+//    @Transactional
+//    public void deleteById(Long id);
 }
