@@ -49,4 +49,7 @@ public class UsersBean {
     private Integer sex;//性别 1:男;2:女
 
 
+
+    private String role;
+    private String permission;
 }

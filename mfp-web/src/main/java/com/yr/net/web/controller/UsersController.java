@@ -114,7 +114,7 @@ public class UsersController {
         }*/
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
         if (usersBean != null) {
-            return new AjaxResponse(200, "Login success", JWTUtil.sign(userInfoReq.getPhone(), userInfoReq.getMessageCode()));
+            return new AjaxResponse(200, "Login success", JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword()));
         } else {
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("用户不存在");

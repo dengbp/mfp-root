@@ -1,5 +1,6 @@
 package com.yr.net.shiro;
 
+import com.yr.net.util.SpringUtil;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
@@ -38,12 +39,18 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+    @Bean
+    public MyRealm myRealm(){
+        MyRealm myRealm = new MyRealm();
+        return myRealm;
+    }
+
     @Bean("securityManager")
     public DefaultWebSecurityManager getManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
-        MyRealm realm = new MyRealm();
-        realm.setPermissionResolver(new UrlPermissionResovler());
-        manager.setRealm(realm);
+        MyRealm myRealm = myRealm();
+        myRealm.setPermissionResolver(new UrlPermissionResovler());
+        manager.setRealm(myRealm);
         /*
          * 关闭shiro自带的session，详情见文档
          * http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29

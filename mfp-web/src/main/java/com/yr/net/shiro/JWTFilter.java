@@ -50,16 +50,19 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        // 获取Authorization字段
-        logger.info("isAuthenticated");
         logger.info(String.valueOf(this.getSubject(httpServletRequest, response).isAuthenticated()));
-
-        String authorization = httpServletRequest.getHeader("Authorization");
-        if (authorization != null) {
+        String token = request.getParameter("token");
+//        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("Get")) {
+//            token = request.getParameter("token");
+//        }
+//        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
+//            token = request.get
+//        }
+        if (token != null) {
             try {
-                JWTToken token = new JWTToken(authorization);
+                JWTToken jwtToken = new JWTToken(token);
                 // 提交给realm进行登入，如果错误他会抛出异常并被捕获
-                getSubject(request, response).login(token);
+                getSubject(request, response).login(jwtToken);
                 return true;
             } catch (Exception e) {
                 response401(response);
