@@ -76,6 +76,7 @@ public class UsersController {
     public AjaxResponse getValidateCode(HttpServletRequest request,HttpServletResponse response, String phone){
         response.setHeader("Access-Control-Allow-Credentials","true");
         AjaxResponse ajaxResponse = new AjaxResponse();
+        log.info("param phone【{}】",phone);
         if(!RegexUtils.checkMobile(phone)){
             log.info("手机号码校验失败");
             ajaxResponse.setCode(1);

@@ -272,7 +272,7 @@ public class RegexUtils {
         if (StringUtils.isBlank(mobile)){
             return false;
         }
-        return Pattern.matches(REGEX_MOBILE_EXACT, mobile);
+        return Pattern.matches(REGEX_MOBILE_EXACT, mobile.trim());
     }
 
     /**

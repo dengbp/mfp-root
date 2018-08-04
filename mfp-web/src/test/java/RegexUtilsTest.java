@@ -29,5 +29,7 @@ public class RegexUtilsTest
 
         System.out.println(Pattern.matches(reg, imgp));
 
+        System.out.println(RegexUtils.checkMobile("13530051353"));
+
     }
 }
