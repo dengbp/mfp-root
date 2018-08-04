@@ -78,7 +78,8 @@ public class UsersController {
         AjaxResponse ajaxResponse = new AjaxResponse();
         log.info("param phone【{}】",phone);
         Map<String,String> map = JSONObject.parseObject(phone,Map.class);
-        if(!RegexUtils.checkMobile(map.get("phone"))){
+        phone = map.get("phone");
+        if(!RegexUtils.checkMobile(phone)){
             log.info("手机号码校验失败");
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("手机号码不正确");
