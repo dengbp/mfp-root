@@ -108,10 +108,10 @@ public class UsersController {
     public AjaxResponse login(HttpServletRequest request,@RequestBody UserInfoReq userInfoReq) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         //暂时注释
-   /*     if(!this.validate(request,ajaxResponse,userInfoReq)){
+        if(!this.validate(request,ajaxResponse,userInfoReq)){
             ajaxResponse.setCode(1);
             return ajaxResponse;
-        }*/
+        }
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
         if (usersBean != null) {
             return new AjaxResponse(200, "Login success", JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword()));

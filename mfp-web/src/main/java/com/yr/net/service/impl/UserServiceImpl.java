@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService{
     CustomerRepository customerRepository;
     @Resource
     AttachmentService attachmentService;
+    private static final String DEFAULTPWD = "yr123456";
 
     @Override
     public Customer saveOrUpdate(Customer customer) {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService{
             String IdNumber = customer.getIdNumber();
             UsersBean usersBean = new UsersBean();
             BeanUtils.copyProperties(customer,usersBean);
-            if(customer.getIdNumber()!=null){//45262619840409
+            if(customer.getIdNumber()!=null){
                 String birthday = IdNumber.substring(10,12).concat("-").concat(IdNumber.substring(12,14));
                 usersBean.setBirthday(birthday);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -215,60 +216,21 @@ public class UserServiceImpl implements UserService{
     @Override
     public AjaxResponse updateUserById(UsersBean usersBean) {
         AjaxResponse ajaxResponse = new AjaxResponse();
-        if (usersBean.getId()==null){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("用户id为空");
-            return ajaxResponse;
-        }
-        if(StringUtils.isBlank(usersBean.getUserName())){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("用户名称为空");
-            return ajaxResponse;
-        }
-        if(usersBean.getHeight()==null || usersBean.getHeight()<=0){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("身高为空");
-            return ajaxResponse;
-        }
-
-        if(usersBean.getSex()==null){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("性别为空");
-            return ajaxResponse;
-        }
-        if(usersBean.getSex().intValue()!=1 && usersBean.getSex().intValue()!=2){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("性别为空");
-            return ajaxResponse;
-        }
-        if(usersBean.getState()==null){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("婚姻状况为空");
-            return ajaxResponse;
-        }
-        if(usersBean.getState().intValue()!=1 && usersBean.getState().intValue()!=2 && usersBean.getState().intValue()!=3){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("婚姻状况为空");
-            return ajaxResponse;
-        }
-        if(StringUtils.isBlank(usersBean.getLoverRequire())){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("征友要求为空");
-            return ajaxResponse;
-        }
-        if(usersBean.getEducation()==null){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("教育程度为空");
+        if (validate(ajaxResponse,usersBean)){
             return ajaxResponse;
         }
         ajaxResponse.setCode(0);
         ajaxResponse.setMsg("信息修改成功");
         Optional optional = customerRepository.findById(usersBean.getId());
+        /*用户已存在*/
         if(optional.isPresent()){
             Customer customer = (Customer)optional.get();
             String IdNumber = customer.getIdNumber();
             String password = customer.getPassword();
             Integer sex = customer.getSex();
+            if(StringUtils.isBlank(usersBean.getPassword())){
+                usersBean.setPassword(DEFAULTPWD);
+            }
             BeanUtils.copyProperties(usersBean,customer);
             if(StringUtils.isNotBlank(IdNumber)){
                 customer.setIdNumber(IdNumber);
@@ -295,6 +257,47 @@ public class UserServiceImpl implements UserService{
             return ajaxResponse;
         }
         return ajaxResponse;
+    }
+
+    private boolean validate(AjaxResponse ajaxResponse,UsersBean usersBean){
+        ajaxResponse.setCode(1);
+        if (usersBean.getId()==null){
+            ajaxResponse.setMsg("用户id为空");
+            return true;
+        }
+        if(StringUtils.isBlank(usersBean.getUserName())){
+            ajaxResponse.setMsg("用户名称为空");
+            return true;
+        }
+        if(usersBean.getHeight()==null || usersBean.getHeight()<=0){
+            ajaxResponse.setMsg("身高为空");
+            return true;
+        }
+
+        if(usersBean.getSex()==null){
+            ajaxResponse.setMsg("性别为空");
+            return true;
+        }
+        if(usersBean.getSex().intValue()!=1 && usersBean.getSex().intValue()!=2){
+            ajaxResponse.setMsg("性别为空");
+            return true;
+        }
+        if(usersBean.getState()==null){
+            return true;
+        }
+        if(usersBean.getState().intValue()!=1 && usersBean.getState().intValue()!=2 && usersBean.getState().intValue()!=3){
+            ajaxResponse.setMsg("婚姻状况为空");
+            return true;
+        }
+        if(StringUtils.isBlank(usersBean.getLoverRequire())){
+            ajaxResponse.setMsg("征友要求为空");
+            return true;
+        }
+        if(usersBean.getEducation()==null){
+            ajaxResponse.setMsg("教育程度为空");
+            return true;
+        }
+        return false;
     }
 
     @Override
