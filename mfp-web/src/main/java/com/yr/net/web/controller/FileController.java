@@ -65,10 +65,6 @@ public class FileController {
     @RequestMapping(value = "/file/single/upload")
     @ResponseBody
     public AjaxResponse upload(@RequestParam("file") MultipartFile file,String userId,String purpose,HttpServletRequest request) {
-     /*   Customer customer = (Customer) request.getSession().getAttribute("user");
-        if(customer==null){
-            return  new AjaxResponse(1,"session expire");
-        }*/
         AjaxResponse ajaxResponse = new AjaxResponse();
         ajaxResponse.setCode(1);
         if (file.isEmpty()) {

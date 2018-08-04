@@ -71,13 +71,14 @@ public class UsersController {
      * @param phone phone
      * @return 返回验证码
      */
-    @RequestMapping(method = RequestMethod.POST,path = "/getValidateCode")
+    @PostMapping("/getValidateCode")
     @ResponseBody
-    public AjaxResponse getValidateCode(HttpServletRequest request,HttpServletResponse response, String phone){
+    public AjaxResponse getValidateCode(HttpServletRequest request,HttpServletResponse response, @RequestBody String phone){
         response.setHeader("Access-Control-Allow-Credentials","true");
         AjaxResponse ajaxResponse = new AjaxResponse();
         log.info("param phone【{}】",phone);
-        if(!RegexUtils.checkMobile(phone)){
+        Map<String,String> map = JSONObject.parseObject(phone,Map.class);
+        if(!RegexUtils.checkMobile(map.get("phone"))){
             log.info("手机号码校验失败");
             ajaxResponse.setCode(1);
             ajaxResponse.setMsg("手机号码不正确");
