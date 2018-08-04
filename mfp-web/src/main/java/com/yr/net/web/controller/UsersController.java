@@ -404,4 +404,15 @@ public class UsersController {
         return ajaxResponse;
     }
 
+    /**
+     * 测试接口
+     * @param userInfoReq userInfoReq
+     * @return 成功信息
+     */
+    @PostMapping("/users/test/edit")
+    @ResponseBody
+    public AjaxResponse edit(@RequestBody UserInfoReq userInfoReq){
+        log.info(JSONObject.toJSONString(userInfoReq));
+        return new AjaxResponse(0,"成功");
+    }
 }

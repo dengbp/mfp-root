@@ -1,15 +1,18 @@
 package com.yr.net.shiro;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yr.net.bean.AjaxResponse;
 import com.yr.net.model.ResponseBean;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -52,12 +55,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         logger.info(String.valueOf(this.getSubject(httpServletRequest, response).isAuthenticated()));
         String token = request.getParameter("token");
-//        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("Get")) {
-//            token = request.getParameter("token");
-//        }
-//        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
-//            token = request.get
-//        }
+        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
+            // 防止流读取一次后就没有了, 所以需要将流继续写出去
+            String responseStrBuilder = HttpHelper.getBodyString(request);
+            Map<String ,String> map = JSONObject.parseObject(responseStrBuilder,Map.class);
+            token = map.get("token");
+            logger.info("current token**************: " + token);
+        }
         if (token != null) {
             try {
                 JWTToken jwtToken = new JWTToken(token);
@@ -90,5 +94,12 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         resp.getWriter().write(JSONObject.toJSONString(responseBean));
         resp.getWriter().flush();
         resp.getWriter().close();
+    }
+
+    @Override
+    public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+        // 防止流读取一次后就没有了, 所以需要将流继续写出去，提供后续使用
+        ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper((HttpServletRequest)request);
+        super.doFilterInternal(requestWrapper, response, chain);
     }
 }

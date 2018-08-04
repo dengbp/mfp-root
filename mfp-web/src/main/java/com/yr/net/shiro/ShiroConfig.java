@@ -45,6 +45,12 @@ public class ShiroConfig {
         return myRealm;
     }
 
+    @Bean
+    public JWTFilter JWTFilter(){
+        JWTFilter jwtFilter = new JWTFilter();
+        return jwtFilter;
+    }
+
     @Bean("securityManager")
     public DefaultWebSecurityManager getManager() {
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
@@ -69,13 +75,14 @@ public class ShiroConfig {
 
         // 添加自己的过滤器并且取名为jwt
         Map<String, Filter> filterMap = new HashMap<>();
-        filterMap.put("jwt", new JWTFilter());
+        filterMap.put("jwt", JWTFilter());
         factoryBean.setFilters(filterMap);
         factoryBean.setSecurityManager(securityManager);
         factoryBean.setUnauthorizedUrl("/401");
         //拦截器.
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/edit", "jwt, perms[edit]");
+        filterChainDefinitionMap.put("/users/test/edit", "jwt");
         filterChainDefinitionMap.put("/admin/hello", "jwt, roles[admin]");
         filterChainDefinitionMap.put("/annotation/**", "jwt");
         filterChainDefinitionMap.put("/**", "anon");
