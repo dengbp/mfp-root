@@ -34,8 +34,8 @@ import java.util.*;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    HQYG.
- * Author:     dengbp
- * CreateDate: 2018/5/7
+ * @Author:     dengbp
+ * @CreateDate: 2018/5/7
  * </pre>
  * <p>
  *     用户管理服务
@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService{
     @Resource
     CustomerRepository customerRepository;
     @Resource
+    private
     AttachmentService attachmentService;
     private static final String DEFAULTPWD = "yr123456";
 
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService{
 
     /**
      * 根据openid查用户
-     * @param openId
+     * @param openId openId
      * @return 用户信息
      */
     @Override
@@ -327,22 +328,24 @@ public class UserServiceImpl implements UserService{
      * @param purpose 1：相册;2：视频;3:头像;4:背景图
      * @return 成功：true;失败：false
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean setUserMultimedia(Attachment attachment, int purpose) {
         switch (purpose){
-            case 1://相册
+            /*相册*/
+            case 1:
                 attachmentService.save(attachment);
-                //customerRepository.setUserPic(url,id);
                 return true;
-            case 2://视频
+            /*视频*/
+            case 2:
                 attachmentService.save(attachment);
-                //customerRepository.setUserVideo(url,id);
                 return true;
-            case 3://头像
+            /*头像*/
+            case 3:
                 customerRepository.setUserHeadPic(attachment.getUrl(),attachment.getBusinessId());
                 return true;
-            case 4://背景图
+            /*背景图*/
+            case 4:
                 customerRepository.setUserBackground(attachment.getUrl(),attachment.getBusinessId());
                 return true;
             default:
