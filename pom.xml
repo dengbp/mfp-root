@@ -26,6 +26,7 @@
         <commons-lang-version>2.6</commons-lang-version>
         <guava-version>24.1-jre</guava-version>
         <jackson-databind-version>2.9.5</jackson-databind-version>
+        <commons-lang3-version>3.7</commons-lang3-version>
     </properties>
 
     <dependencyManagement>

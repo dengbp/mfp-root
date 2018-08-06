@@ -40,6 +40,16 @@ public class PartyUpdateRecord implements Serializable {
 
     private Date endTime;
 
+    /**
+     * 诚意金id
+     */
+    private Integer goods_id;
+
+    /**
+     * 诚意金金额
+     */
+    private Integer price;
+
     private Integer entryFee;
 
     private Long modifierId;

@@ -9,6 +9,18 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * All rights Reserved, Designed By SEGI
+ * <pre>
+ * Copyright:  Copyright(C) 2018
+ * Company:    SEGI.
+ * @Author:     dengbp
+ * @CreateDate: 2018/5/28
+ * </pre>
+ * <p>
+ *     参数活动报名表
+ * </p>
+ */
 @Data
 @Entity(name="yr_enroll")
 public class Enroll implements Serializable{

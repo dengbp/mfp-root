@@ -1,13 +1,9 @@
 package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
-import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Customer;
-import com.yr.net.entity.Enroll;
 import com.yr.net.entity.TopLine;
-import com.yr.net.model.JoinPartyReq;
 import com.yr.net.service.UserService;
-import com.yr.net.service.impl.EnrollService;
 import com.yr.net.service.impl.TopLineService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.text.MessageFormat;
 import java.util.Date;
 
 /**

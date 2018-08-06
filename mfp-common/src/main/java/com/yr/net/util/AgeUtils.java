@@ -8,8 +8,8 @@ import java.util.Date;
  * <pre>
  * Copyright:  Copyright(C) 2018
  * Company:    SEGI.
- * Author:     dengbp
- * CreateDate: 2018/6/9
+ * @Author:     dengbp
+ * @CreateDate: 2018/6/9
  * </pre>
  * <p>
  *     根据生日计算年龄
