@@ -1,6 +1,5 @@
 package com.yr.net.entity;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 
 import javax.persistence.Entity;
