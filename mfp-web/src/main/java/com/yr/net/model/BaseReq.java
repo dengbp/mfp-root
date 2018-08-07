@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class BaseReq implements Serializable{
     private static final long serialVersionUID = -1303894215211299117L;
 
-    private String token;
+    public String token;
 
     public String getToken() {
         return token;

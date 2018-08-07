@@ -65,4 +65,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long>,JpaSpe
     @Query("update yr_customer u set u.openId = ?1 where u.id = ?2")
     public void setUserOpenId(String openId,Long id);
 
+    @Modifying
+    @Query("update yr_customer u set u.id = ?1 where u.id = ?2")
+    public void setUserRole(Long id,Integer role);
+
 }

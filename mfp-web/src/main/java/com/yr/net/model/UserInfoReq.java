@@ -29,6 +29,8 @@ public class UserInfoReq extends BaseReq{
      */
     private String codeTime;
 
+    private String openId;
+
 
     public UserInfoReq() {
     }

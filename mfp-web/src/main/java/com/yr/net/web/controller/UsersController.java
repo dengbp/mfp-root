@@ -6,8 +6,9 @@ import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
 import com.yr.net.entity.Customer;
 import com.yr.net.entity.WXCustomer;
-import com.yr.net.exception.UnauthorizedException;
 import com.yr.net.http.HttpUtils;
+import com.yr.net.model.LoginResp;
+import com.yr.net.model.RoleSettingReq;
 import com.yr.net.model.UserInfoReq;
 import com.yr.net.service.UserService;
 import com.yr.net.service.impl.AttachmentService;
@@ -116,43 +117,46 @@ public class UsersController {
             return ajaxResponse;
         }
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
+        String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
         if (usersBean != null) {
-            return new AjaxResponse(200, "Login success", JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword()));
+            LoginResp loginResp = new LoginResp(usersBean.getId(),new Integer(usersBean.getRole()),token);
+            return new AjaxResponse(200, "Login success", loginResp);
         } else {
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("用户不存在");
-            return ajaxResponse;
+            Customer customer = new Customer();
+            customer.setPhone(userInfoReq.getPhone());
+            customer.setOpenId(userInfoReq.getOpenId());
+            customer.setUserName(userInfoReq.getUsername());
+            customer.setPassword(userInfoReq.getPassword());
+            customer = userService.saveOrUpdate(customer);
+            LoginResp loginResp = new LoginResp(customer.getId(),new Integer(customer.getRole()),token);
+            return new AjaxResponse(200, "Login success", loginResp);
         }
     }
 
     /**
-     * 绑定
+     * 角色绑定
      * @param request
-     * @param phone 手机
-     * @param code 验证码
-     * @param codeTime 验证码用效时间
-     * @param role 角色。0：相亲；1：红娘
+     * @param roleSettingReq 用户角色信息
      * @return 登录结果
      */
-    @PostMapping("/login")
+    @PostMapping("/user/role/binging")
     @ResponseBody
-    public AjaxResponse login(HttpServletRequest request,String phone,String code,String codeTime,Integer role,String openId){
-        log.info("请求参数:phone[{}],code[{}],codeTime[{}],role[{}]",phone,code,codeTime,role);
+    public AjaxResponse binging(HttpServletRequest request, @RequestBody RoleSettingReq roleSettingReq){
+        log.info("请求参数:id[{}],token[{}],role[{}]",roleSettingReq.getUserId(),roleSettingReq.getToken(),roleSettingReq.getRole());
         AjaxResponse ajaxResponse = new AjaxResponse();
-        UserInfoReq userInfoReq = new UserInfoReq(phone,code,codeTime);
-        if(!this.validate(request,ajaxResponse,userInfoReq)){
+        if (null == roleSettingReq.getUserId()){
             ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("用户id为空");
             return ajaxResponse;
         }
+        if (null == roleSettingReq.getRole()){
+            ajaxResponse.setCode(1);
+            ajaxResponse.setMsg("用户角色为空");
+            return ajaxResponse;
+        }
+        userService.updateRoleById(roleSettingReq.getUserId(),roleSettingReq.getRole());
         ajaxResponse.setCode(0);
-        Customer customer = new Customer();
-        customer.setPhone(phone);
-        customer.setRole(role);
-        customer.setOpenId(openId);
-        customer = userService.saveOrUpdate(customer);
-        ajaxResponse.setResult(customer);
-        ajaxResponse.setMsg("绑定成功");
-        request.getSession().setAttribute("user",customer);
+        ajaxResponse.setMsg("角色绑定成功");
         return ajaxResponse;
     }
 
@@ -189,6 +193,11 @@ public class UsersController {
         long current = System.currentTimeMillis();
         if(!id.equals(userInfoReq.getMessageCode()) || (current - new Long(preCode[1]).longValue())>EXPIRE){
             ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
+            validate = false;
+            return validate;
+        }
+        if (StringUtils.isBlank(userInfoReq.getOpenId())){
+            ajaxResponse.setMsg("OpenId不能为空");
             validate = false;
             return validate;
         }

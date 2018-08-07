@@ -154,7 +154,13 @@ public interface UserService {
      */
     Customer searchByOpenId(String openId);
 
-
+    /**
+     * 更新用户表role字段
+     * @param id 用户id
+     * @param role 角色
+     * @return 更新状态 true:成功；false:失败
+     */
+    boolean updateRoleById(Long id,Integer role);
 
 
 }

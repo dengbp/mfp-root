@@ -60,6 +60,9 @@ public class UserServiceImpl implements UserService{
         customer.setCreateTime(new Date());
         customer.setAge(0);
         customer.setLoginTimes(0);
+        if(StringUtils.isBlank(customer.getPassword())){
+            customer.setPassword(DEFAULTPWD);
+        }
         return  customerRepository.save(customer);
     }
 
@@ -384,6 +387,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public Customer searchByOpenId(String openId) {
         return customerRepository.findByOpenId(openId);
+    }
+
+    @Override
+    public boolean updateRoleById(Long id, Integer role) {
+        customerRepository.setUserRole(id,role);
+        return true;
     }
 
 }
