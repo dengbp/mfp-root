@@ -117,11 +117,11 @@ public class UsersController {
             return ajaxResponse;
         }
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
-        String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
         if (usersBean != null) {
             if (usersBean.getRole()==null){
                 Integer role = new Integer(-1);
             }
+            String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
             LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
         } else {
@@ -131,6 +131,7 @@ public class UsersController {
             customer.setUserName(userInfoReq.getUsername());
             customer.setPassword(userInfoReq.getPassword());
             customer = userService.saveOrUpdate(customer);
+            String token = JWTUtil.sign(userInfoReq.getPhone(), customer.getPassword());
             LoginResp loginResp = new LoginResp(customer.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
         }
