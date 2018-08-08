@@ -62,7 +62,18 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public ResponseBean globalException(HttpServletRequest request, Throwable ex) {
-        return new ResponseBean(getStatus(request).value(), ex.getMessage(), null);
+        return new ResponseBean(getStatus(request).value(), ex.getMessage(), ex.getMessage());
+    }
+    /**
+     * 捕捉其他所有异常
+     * @param request request
+     * @param ex ex
+     * @return
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseBean globalRuntimeException(HttpServletRequest request, Throwable ex) {
+        return new ResponseBean(getStatus(request).value(), ex.getMessage(), ex.getMessage());
     }
 }
 

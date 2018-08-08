@@ -119,7 +119,10 @@ public class UsersController {
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
         String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
         if (usersBean != null) {
-            LoginResp loginResp = new LoginResp(usersBean.getId(),new Integer(usersBean.getRole()),token);
+            if (usersBean.getRole()==null){
+                Integer role = new Integer(-1);
+            }
+            LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
         } else {
             Customer customer = new Customer();
@@ -128,7 +131,7 @@ public class UsersController {
             customer.setUserName(userInfoReq.getUsername());
             customer.setPassword(userInfoReq.getPassword());
             customer = userService.saveOrUpdate(customer);
-            LoginResp loginResp = new LoginResp(customer.getId(),new Integer(customer.getRole()),token);
+            LoginResp loginResp = new LoginResp(customer.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
         }
     }
@@ -318,7 +321,7 @@ public class UsersController {
      */
     @RequestMapping(method = RequestMethod.POST,path = "/users/update")
     @ResponseBody
-    public AjaxResponse updateUser(HttpServletRequest request,UsersBean usersBean){
+    public AjaxResponse updateUser(HttpServletRequest request,@RequestParam("usersBean") UsersBean usersBean){
         return userService.updateUserById(usersBean);
     }
 
