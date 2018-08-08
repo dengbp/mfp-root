@@ -321,7 +321,7 @@ public class UsersController {
      */
     @RequestMapping(method = RequestMethod.POST,path = "/users/update")
     @ResponseBody
-    public AjaxResponse updateUser(HttpServletRequest request,@RequestParam("usersBean") UsersBean usersBean){
+    public AjaxResponse updateUser(@RequestBody UsersBean usersBean){
         return userService.updateUserById(usersBean);
     }
 
