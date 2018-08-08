@@ -132,20 +132,19 @@ public class UsersController {
             customer.setPassword(userInfoReq.getPassword());
             customer = userService.saveOrUpdate(customer);
             String token = JWTUtil.sign(userInfoReq.getPhone(), customer.getPassword());
-            LoginResp loginResp = new LoginResp(customer.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
+            LoginResp loginResp = new LoginResp(customer.getId(),customer.getRole()==null?new Integer(-1):new Integer(customer.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
         }
     }
 
     /**
      * 角色绑定
-     * @param request
      * @param roleSettingReq 用户角色信息
      * @return 登录结果
      */
     @PostMapping("/user/role/binging")
     @ResponseBody
-    public AjaxResponse binging(HttpServletRequest request, @RequestBody RoleSettingReq roleSettingReq){
+    public AjaxResponse binging(@RequestBody RoleSettingReq roleSettingReq){
         log.info("请求参数:id[{}],token[{}],role[{}]",roleSettingReq.getUserId(),roleSettingReq.getToken(),roleSettingReq.getRole());
         AjaxResponse ajaxResponse = new AjaxResponse();
         if (null == roleSettingReq.getUserId()){
