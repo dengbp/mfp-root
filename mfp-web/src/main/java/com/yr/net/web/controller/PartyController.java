@@ -3,10 +3,12 @@ package com.yr.net.web.controller;
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.entity.Customer;
 import com.yr.net.entity.Enroll;
+import com.yr.net.entity.PartyTheme;
 import com.yr.net.model.JoinPartyReq;
 import com.yr.net.model.PartyApplyReq;
 import com.yr.net.service.UserService;
 import com.yr.net.service.impl.PartyService;
+import com.yr.net.service.impl.PartyThemeService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -37,6 +40,8 @@ public class PartyController {
     UserService userService;
     @Resource
     PartyService partyService;
+    @Resource
+    PartyThemeService partyThemeService;
 
     /**
      * 活动，约会申请发布接口
@@ -176,6 +181,14 @@ public class PartyController {
             ajaxResponse.setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , joinPartyReq.getPartyCode()));
 
         }
+        return ajaxResponse;
+    }
+
+    @GetMapping("/theme/query")
+    public AjaxResponse queryTheme(@RequestParam("themeType") Integer themeType){
+        List<PartyTheme> list = partyThemeService.findByType(themeType);
+        AjaxResponse ajaxResponse = new AjaxResponse(0,"查询成功");
+        ajaxResponse.setResult(list);
         return ajaxResponse;
     }
 
