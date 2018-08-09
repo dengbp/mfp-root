@@ -389,6 +389,7 @@ public class UserServiceImpl implements UserService{
         return customerRepository.findByOpenId(openId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateRoleById(Long id, Integer role) {
         customerRepository.setUserRole(role,id);

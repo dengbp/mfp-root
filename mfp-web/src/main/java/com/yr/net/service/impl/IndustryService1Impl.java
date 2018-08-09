@@ -44,7 +44,7 @@ public class IndustryService1Impl implements com.yr.net.service.IndustryService1
      * 根据行业类型编码去重
      * @return 去重后的行业列表
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public List<Industry> getIndustry(){
         return industryRepository.findAllByIndustryQueryAndStream();

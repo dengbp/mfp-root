@@ -126,4 +126,10 @@ public class CustomerCRUDTest {
     public void setUserMultimedia(){
         //userService.setUserMultimedia("http://193.112.214.225/pic/11150470_854883741235667_6158693685562016581_n.jpg",920L,3);
     }
+
+    @Test
+    public void updateRole(){
+        userService.updateRoleById(new Long(924),0);
+        logger.info("成功");
+    }
 }
