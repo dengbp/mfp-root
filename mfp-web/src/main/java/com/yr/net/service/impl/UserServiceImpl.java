@@ -391,7 +391,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean updateRoleById(Long id, Integer role) {
-        customerRepository.setUserRole(id,role);
+        customerRepository.setUserRole(role,id);
         return true;
     }
 
