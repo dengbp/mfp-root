@@ -58,14 +58,22 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         logger.info(String.valueOf(this.getSubject((HttpServletRequest)request, response).isAuthenticated()));
         String token = request.getParameter("token");
+        if (StringUtils.isNotBlank(token)){
+            return this.login(request,response,token);
+        }
         /**
          * 获取请求的content-type
          */
         String contentType = request.getContentType();
+        if (StringUtils.isBlank(contentType)){
+            logger.warn("获取request的contentType为空！！！");
+            response401(response);
+            return false;
+        }
         /**
          * 文件上传请求 *特殊请求，而且token还是空的
          */
-        if(StringUtils.isBlank(token) && contentType.contains("multipart/form-data")){
+        if(contentType.contains("multipart/form-data")){
             CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
             /**
              * CommonsMultipartResolver 是spring框架中自带的类，使用multipartResolver.resolveMultipart(final HttpServletRequest request)方法可以将request转化为MultipartHttpServletRequest
@@ -75,7 +83,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             /**
              * 获取参数中的token
              */
-            token=multiReq.getParameter("token");
+            token = multiReq.getParameter("token");
             /**
              * 将转化后的request赋值到过滤链中的参数
              */
@@ -83,15 +91,26 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             /**
              * 非文件上传请求
              */
+            if (StringUtils.isNotBlank(token)){
+                return this.login(request,response,token);
+            }
         }
         /**
          * token如果还是空，尝试最后一次从body中获取
          */
-        if (StringUtils.isBlank(token) && ((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && contentType.contains("application/json")) {
+        if (((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && contentType.contains("application/json")) {
             String responseStrBuilder = HttpHelper.getBodyString(request);
             Map<String ,String> map = JSONObject.parseObject(responseStrBuilder,Map.class);
             token = map.get("token");
+            if (StringUtils.isNotBlank(token)){
+                return this.login(request,response,token);
+            }
         }
+        logger.warn("请求异常,请求检查请求信息是否正常!!!");
+        return false;
+    }
+
+    private boolean login(ServletRequest request,ServletResponse response,String token) throws Exception {
         logger.info("current token**************: " + token);
         if (token != null) {
             try {
@@ -133,7 +152,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
          * 防止流读取一次后就没有了, 所以需要将流继续写出去，提供后续使用
          */
         String contentType = request.getContentType();
-        if(((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && contentType.contains("application/json")) {
+        if(((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && null != contentType && contentType.contains("application/json")) {
             ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper((HttpServletRequest)request);
             super.doFilterInternal(requestWrapper, response, chain);
         }else{

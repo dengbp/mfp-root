@@ -111,7 +111,6 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse login(HttpServletRequest request,@RequestBody UserInfoReq userInfoReq) {
         AjaxResponse ajaxResponse = new AjaxResponse();
-        //暂时注释
         if(!this.validate(request,ajaxResponse,userInfoReq)){
             ajaxResponse.setCode(1);
             return ajaxResponse;
