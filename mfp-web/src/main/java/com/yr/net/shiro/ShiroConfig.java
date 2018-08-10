@@ -81,7 +81,10 @@ public class ShiroConfig {
         factoryBean.setUnauthorizedUrl("/401");
         //拦截器.
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+
         filterChainDefinitionMap.put("/edit", "jwt, perms[edit]");
+//        filterChainDefinitionMap.put("/file/single/upload", "jwt");
+//        filterChainDefinitionMap.put("/users/test/update", "jwt");
         filterChainDefinitionMap.put("/users/test/edit", "jwt");
         filterChainDefinitionMap.put("/admin/hello", "jwt, roles[admin]");
         filterChainDefinitionMap.put("/annotation/**", "jwt");

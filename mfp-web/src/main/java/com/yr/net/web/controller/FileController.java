@@ -64,7 +64,7 @@ public class FileController {
      */
     @RequestMapping(value = "/file/single/upload")
     @ResponseBody
-    public AjaxResponse upload(@RequestParam("file") MultipartFile file,String userId,String purpose,HttpServletRequest request) {
+    public AjaxResponse upload(@RequestParam("file") MultipartFile file,String userId,String purpose) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         ajaxResponse.setCode(1);
         if (file.isEmpty()) {

@@ -2,9 +2,13 @@ package com.yr.net.shiro;
 
 import com.alibaba.fastjson.JSONObject;
 import com.yr.net.model.ResponseBean;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -52,11 +56,38 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        logger.info(String.valueOf(this.getSubject(httpServletRequest, response).isAuthenticated()));
+        logger.info(String.valueOf(this.getSubject((HttpServletRequest)request, response).isAuthenticated()));
         String token = request.getParameter("token");
-        if (((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
-            // 防止流读取一次后就没有了, 所以需要将流继续写出去
+        /**
+         * 获取请求的content-type
+         */
+        String contentType = request.getContentType();
+        /**
+         * 文件上传请求 *特殊请求，而且token还是空的
+         */
+        if(StringUtils.isBlank(token) && contentType.contains("multipart/form-data")){
+            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+            /**
+             * CommonsMultipartResolver 是spring框架中自带的类，使用multipartResolver.resolveMultipart(final HttpServletRequest request)方法可以将request转化为MultipartHttpServletRequest
+             * 使用MultipartHttpServletRequest对象可以使用getParameter(key)获取对应属性的值
+             */
+            MultipartHttpServletRequest multiReq = multipartResolver.resolveMultipart((HttpServletRequest)request);
+            /**
+             * 获取参数中的token
+             */
+            token=multiReq.getParameter("token");
+            /**
+             * 将转化后的request赋值到过滤链中的参数
+             */
+            request = multiReq;
+            /**
+             * 非文件上传请求
+             */
+        }
+        /**
+         * token如果还是空，尝试最后一次从body中获取
+         */
+        if (StringUtils.isBlank(token) && ((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
             String responseStrBuilder = HttpHelper.getBodyString(request);
             Map<String ,String> map = JSONObject.parseObject(responseStrBuilder,Map.class);
             token = map.get("token");
@@ -99,7 +130,13 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     @Override
     public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         // 防止流读取一次后就没有了, 所以需要将流继续写出去，提供后续使用
-        ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper((HttpServletRequest)request);
-        super.doFilterInternal(requestWrapper, response, chain);
+        String contentType = request.getContentType();//获取请求的content-type
+        if(((HttpServletRequest)request).getMethod().equalsIgnoreCase("get") || contentType.contains("multipart/form-data")||contentType.contains("www-form-urlencoded")) {
+            super.doFilterInternal(request, response, chain);
+        }else{
+            ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper((HttpServletRequest)request);
+            super.doFilterInternal(requestWrapper, response, chain);
+        }
+
     }
 }

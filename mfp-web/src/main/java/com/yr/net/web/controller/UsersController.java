@@ -118,9 +118,6 @@ public class UsersController {
         }
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
         if (usersBean != null) {
-            if (usersBean.getRole()==null){
-                Integer role = new Integer(-1);
-            }
             String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
             LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             return new AjaxResponse(200, "Login success", loginResp);
@@ -321,7 +318,7 @@ public class UsersController {
      */
     @RequestMapping(method = RequestMethod.POST,path = "/users/update")
     @ResponseBody
-    public AjaxResponse updateUser(@RequestBody UsersBean usersBean){
+    public AjaxResponse updateUser(UsersBean usersBean){
         return userService.updateUserById(usersBean);
     }
 
@@ -428,6 +425,18 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse edit(@RequestBody UserInfoReq userInfoReq){
         log.info(JSONObject.toJSONString(userInfoReq));
+        return new AjaxResponse(0,"成功");
+    }
+
+    /**
+     * 用户资料更新
+     * @param usersBean
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST,path = "/users/test/update")
+    @ResponseBody
+    public AjaxResponse updateUserTest(UsersBean usersBean){
+        log.info(usersBean.toString());
         return new AjaxResponse(0,"成功");
     }
 }

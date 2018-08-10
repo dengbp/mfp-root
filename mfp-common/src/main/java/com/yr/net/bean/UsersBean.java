@@ -1,5 +1,6 @@
 package com.yr.net.bean;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,8 +19,7 @@ import java.util.Date;
  *     用于与前台页面交互的用户bean
  * </p>
  */
-@Setter
-@Getter
+@Data
 public class UsersBean {
     private Long id;
     private String userName;
@@ -49,7 +49,7 @@ public class UsersBean {
     private Integer sex;//性别 1:男;2:女
 
 
-
+    private String token;
     private String role;
     private String permission;
 }
