@@ -297,7 +297,7 @@ public class UsersController {
      */
     @RequestMapping(method = RequestMethod.GET,path = "/users/info")
     @ResponseBody
-    public AjaxResponse getUserInfo(HttpServletRequest request, HttpServletResponse response,Long id) {
+    public AjaxResponse getUserInfo(Long id) {
         AjaxResponse ajaxResponse = new AjaxResponse();
         log.info("call getUserInfo method...");
         ajaxResponse.setCode(1);

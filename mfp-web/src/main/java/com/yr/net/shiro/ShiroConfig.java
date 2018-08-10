@@ -85,6 +85,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/edit", "jwt, perms[edit]");
 //        filterChainDefinitionMap.put("/file/single/upload", "jwt");
 //        filterChainDefinitionMap.put("/users/test/update", "jwt");
+        filterChainDefinitionMap.put("/users/info", "jwt");
+        filterChainDefinitionMap.put("/users/update", "jwt");
         filterChainDefinitionMap.put("/users/test/edit", "jwt");
         filterChainDefinitionMap.put("/admin/hello", "jwt, roles[admin]");
         filterChainDefinitionMap.put("/annotation/**", "jwt");
