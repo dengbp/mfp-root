@@ -87,12 +87,12 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         /**
          * token如果还是空，尝试最后一次从body中获取
          */
-        if (StringUtils.isBlank(token) && ((HttpServletRequest) request).getMethod().equalsIgnoreCase("post")) {
+        if (StringUtils.isBlank(token) && ((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && contentType.contains("application/json")) {
             String responseStrBuilder = HttpHelper.getBodyString(request);
             Map<String ,String> map = JSONObject.parseObject(responseStrBuilder,Map.class);
             token = map.get("token");
-            logger.info("current token**************: " + token);
         }
+        logger.info("current token**************: " + token);
         if (token != null) {
             try {
                 JWTToken jwtToken = new JWTToken(token);
@@ -129,13 +129,15 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     public void doFilterInternal(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        // 防止流读取一次后就没有了, 所以需要将流继续写出去，提供后续使用
-        String contentType = request.getContentType();//获取请求的content-type
-        if(((HttpServletRequest)request).getMethod().equalsIgnoreCase("get") || contentType.contains("multipart/form-data")||contentType.contains("www-form-urlencoded")) {
-            super.doFilterInternal(request, response, chain);
-        }else{
+        /**
+         * 防止流读取一次后就没有了, 所以需要将流继续写出去，提供后续使用
+         */
+        String contentType = request.getContentType();
+        if(((HttpServletRequest)request).getMethod().equalsIgnoreCase("post") && contentType.contains("application/json")) {
             ServletRequest requestWrapper = new BodyReaderHttpServletRequestWrapper((HttpServletRequest)request);
             super.doFilterInternal(requestWrapper, response, chain);
+        }else{
+            super.doFilterInternal(request, response, chain);
         }
 
     }
