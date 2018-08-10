@@ -120,6 +120,7 @@ public class UsersController {
         if (usersBean != null) {
             String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
             LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
+            log.info("登录成功，返回结果【{}】",JSONObject.toJSONString(loginResp));
             return new AjaxResponse(200, "Login success", loginResp);
         } else {
             Customer customer = new Customer();
@@ -290,8 +291,6 @@ public class UsersController {
 
     /**
      * 根据id获取用户资料
-     * @param request request
-     * @param response response
      * @param id id
      * @return 用户资料
      */

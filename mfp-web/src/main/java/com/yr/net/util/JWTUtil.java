@@ -23,8 +23,8 @@ import java.util.Date;
  */
 public class JWTUtil {
 
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 5*60*1000;
+    // 过期时间10分钟
+    private static final long EXPIRE_TIME = 10*60*1000;
 
     /**
      * 校验token是否正确
@@ -38,7 +38,7 @@ public class JWTUtil {
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
                     .build();
-            DecodedJWT jwt = verifier.verify(token);
+            //DecodedJWT jwt = verifier.verify(token);
             return true;
         } catch (Exception exception) {
             return false;
