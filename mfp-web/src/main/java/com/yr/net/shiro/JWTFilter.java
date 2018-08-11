@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
@@ -140,6 +141,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      * @throws Exception Exception
      */
     private void response401(ServletResponse resp) throws Exception {
+        ((HttpServletResponse)resp).setHeader("Access-Control-Allow-Origin", "*");
         ResponseBean responseBean = new ResponseBean(401, "Unauthorized", null);
         resp.getWriter().write(JSONObject.toJSONString(responseBean));
         resp.getWriter().flush();
