@@ -9,12 +9,14 @@ import com.yr.net.model.PartyApplyReq;
 import com.yr.net.service.UserService;
 import com.yr.net.service.impl.PartyService;
 import com.yr.net.service.impl.PartyThemeService;
+import com.yr.net.util.RegexUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -155,7 +157,7 @@ public class PartyController {
      * @return 报名结果
      */
     @RequestMapping(method = RequestMethod.POST,path = "/join")
-    public AjaxResponse register(@RequestBody JoinPartyReq joinPartyReq){
+    public AjaxResponse join(@RequestBody JoinPartyReq joinPartyReq){
        if(StringUtils.isBlank(joinPartyReq.getOpenId()) && joinPartyReq.getUserId()==null){
            return new AjaxResponse(1,"用户信息不能为空");
        }
@@ -183,6 +185,102 @@ public class PartyController {
         }
         return ajaxResponse;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * 活动报名(临时使用)
+     * @param request request
+     * @param phone phone
+     * @param code code
+     * @param codeTime codeTime
+     * @return 响应结果
+     */
+    @RequestMapping(method = RequestMethod.POST,path = "/join2")
+    @ResponseBody
+    public AjaxResponse join2(HttpServletRequest request, String phone, String code, String codeTime, String partyId){
+        logger.info("请求参数:phone[{}],code[{}],codeTime[{}],partyId[{}]",phone,code,codeTime,partyId);
+        AjaxResponse ajaxResponse = new AjaxResponse();
+        ajaxResponse.setCode(1);
+        String[] preCode = codeTime.split("_");
+        if (preCode.length != 3){
+            ajaxResponse.setMsg("先获取手机验证码");
+            return ajaxResponse;
+        }
+        if(!RegexUtils.checkMobile(phone)){
+            ajaxResponse.setMsg("手机号码格式不正确");
+            return ajaxResponse;
+        }
+        if (!StringUtils.equals(phone,preCode[2])){
+            ajaxResponse.setMsg("手机号码校验不通过");
+            return ajaxResponse;
+        }
+        String id = (String) request.getSession().getAttribute("code");
+        ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
+        long current = System.currentTimeMillis();
+        if(id.equals(code) && (current - new Long(preCode[1]).longValue())<1000 * 60 * 2){
+            ajaxResponse.setCode(0);
+            Customer customer = new Customer();
+            customer.setPhone(phone);
+            customer = userService.saveOrUpdate(customer);
+            Enroll enroll = new Enroll();
+            this.copyProperty2(customer,enroll);
+            enroll.setPartyCode(partyId);
+            enroll.setPhone(phone);
+            if (partyService.saveOrUpdate(enroll)){
+                ajaxResponse.setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,稍后客服人员将会与您联系确认" , partyId));
+            }else{
+                ajaxResponse.setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , partyId));
+
+            }
+        }
+        return ajaxResponse;
+    }
+
+
+    /**
+     * 复制对象属性(临时使用)
+     * @param customer 用户信息
+     * @param enroll 目标对象
+     */
+    private void copyProperty2(Customer customer,Enroll enroll){
+        enroll.setCreateTime(new Date());
+        enroll.setIsAgreement(2);
+        enroll.setPayAll(2);
+        enroll.setPayDeposit(2);
+        logger.info("customer:{}",customer);
+        if(customer.getSex() != null){
+            enroll.setSex(customer.getSex());
+        }
+        enroll.setWechatNickName(customer.getWeChartNickName());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @GetMapping("/theme/query")
     public AjaxResponse queryTheme(@RequestParam("themeType") Integer themeType){
