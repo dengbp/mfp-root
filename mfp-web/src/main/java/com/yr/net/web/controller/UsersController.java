@@ -304,6 +304,11 @@ public class UsersController {
             ajaxResponse.setCode(0);
             ajaxResponse.setMsg("成功");
             UsersBean usersBean = userService.findById(id);
+            if (null == usersBean){
+                ajaxResponse.setCode(401);
+                ajaxResponse.setMsg("没有此用户，id【"+id.longValue()+"】");
+                return ajaxResponse;
+            }
             ajaxResponse.setResult(usersBean);
         }
         return ajaxResponse;
