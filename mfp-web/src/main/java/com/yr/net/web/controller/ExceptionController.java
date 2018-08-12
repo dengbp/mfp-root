@@ -1,7 +1,7 @@
 package com.yr.net.web.controller;
 
+import com.yr.net.bean.AjaxResponse;
 import com.yr.net.exception.UnauthorizedException;
-import com.yr.net.model.ResponseBean;
 import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,8 +31,8 @@ public class ExceptionController {
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ShiroException.class)
-    public ResponseBean handle401(ShiroException e) {
-        return new ResponseBean(401, e.getMessage(), null);
+    public AjaxResponse handle401(ShiroException e) {
+        return new AjaxResponse(401, e.getMessage(), null);
     }
 
     /**
@@ -41,8 +41,8 @@ public class ExceptionController {
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseBean handle401() {
-        return new ResponseBean(401, "Unauthorized", null);
+    public AjaxResponse handle401() {
+        return new AjaxResponse(401, "Unauthorized", null);
     }
 
     private HttpStatus getStatus(HttpServletRequest request) {
@@ -61,8 +61,8 @@ public class ExceptionController {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
-    public ResponseBean globalException(HttpServletRequest request, Throwable ex) {
-        return new ResponseBean(getStatus(request).value(), ex.getMessage(), ex.getMessage());
+    public AjaxResponse globalException(HttpServletRequest request, Throwable ex) {
+        return new AjaxResponse(getStatus(request).value(), ex.getMessage(), ex.getMessage());
     }
     /**
      * 捕捉其他所有异常
@@ -72,8 +72,8 @@ public class ExceptionController {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
-    public ResponseBean globalRuntimeException(HttpServletRequest request, Throwable ex) {
-        return new ResponseBean(getStatus(request).value(), ex.getMessage(), ex.getMessage());
+    public AjaxResponse globalRuntimeException(HttpServletRequest request, Throwable ex) {
+        return new AjaxResponse(getStatus(request).value(), ex.getMessage(), ex.getMessage());
     }
 }
 

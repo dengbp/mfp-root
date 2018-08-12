@@ -1,15 +1,13 @@
 package com.yr.net.shiro;
 
 import com.alibaba.fastjson.JSONObject;
-import com.yr.net.model.ResponseBean;
+import com.yr.net.bean.AjaxResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -141,8 +139,15 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
      * @throws Exception Exception
      */
     private void response401(ServletResponse resp) throws Exception {
-        ((HttpServletResponse)resp).setHeader("Access-Control-Allow-Origin", "*");
-        ResponseBean responseBean = new ResponseBean(401, "Unauthorized", null);
+        HttpServletResponse response = (HttpServletResponse)resp;
+        /**
+         * 解决access control allow origin错误提示；使用通配符*，允许所有跨域访问，所以跨域访问成功。
+         */
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        //将实体对象转换为JSON Object转换
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        AjaxResponse responseBean = new AjaxResponse(401, "Unauthorized", null);
         resp.getWriter().write(JSONObject.toJSONString(responseBean));
         resp.getWriter().flush();
         resp.getWriter().close();
