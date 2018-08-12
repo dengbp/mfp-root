@@ -33,10 +33,6 @@ public class InterestController {
     @RequestMapping(method = RequestMethod.GET,path = "/interest/list")
     @ResponseBody
     public AjaxResponse interestList(){
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setResult(interestService.findAll());
-        ajaxResponse.setMsg("成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("成功").setResult(interestService.findAll());
     }
 }

@@ -72,7 +72,7 @@ public class WxPayController {
         //微信统一下单接口
         orderReq.setOrderId(orderEntity.getOrderId());
         String json = wxPayService.unifiedorder(orderReq);
-        return new AjaxResponse(0,"下单成功", json);
+        return AjaxResponse.success().setResult(json).setMsg("下单成功");
     }
 
 

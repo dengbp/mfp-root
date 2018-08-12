@@ -219,12 +219,11 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public AjaxResponse updateUserById(UsersBean usersBean) {
-        AjaxResponse ajaxResponse = new AjaxResponse();
+        AjaxResponse ajaxResponse =  AjaxResponse.fail();
         if (validate(ajaxResponse,usersBean)){
             return ajaxResponse;
         }
-        ajaxResponse.setCode(0);
-        ajaxResponse.setMsg("信息修改成功");
+        ajaxResponse = AjaxResponse.success().setMsg("信息修改成功");
         Optional optional = customerRepository.findById(usersBean.getId());
         /*用户已存在*/
         if(optional.isPresent()){
@@ -240,14 +239,10 @@ public class UserServiceImpl implements UserService{
                 customer.setIdNumber(IdNumber);
             }else{
                 if(StringUtils.isBlank(usersBean.getIdNumber())){
-                    ajaxResponse.setCode(1);
-                    ajaxResponse.setMsg("身份证号码为空");
-                    return ajaxResponse;
+                    return AjaxResponse.fail().setMsg("身份证号码为空");
                 }else
                 if (!RegexUtils.checkIDNumber(usersBean.getIdNumber())){
-                    ajaxResponse.setCode(1);
-                    ajaxResponse.setMsg("身份证号码有误");
-                    return ajaxResponse;
+                    return AjaxResponse.fail().setMsg("身份证号码有误");
                 }
             }
             if (StringUtils.isNotBlank(password)){
@@ -264,7 +259,6 @@ public class UserServiceImpl implements UserService{
     }
 
     private boolean validate(AjaxResponse ajaxResponse,UsersBean usersBean){
-        ajaxResponse.setCode(1);
         if (usersBean.getId()==null){
             ajaxResponse.setMsg("用户id为空");
             return true;

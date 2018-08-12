@@ -90,7 +90,7 @@ public class WXInterfaceController {
     public AjaxResponse getGlobalToken() {
         logger.info("call getGlobalToken method...");
         String token =  accessTokenService.getGlobalToken();
-        return new AjaxResponse(0,"获取成功",token);
+        return AjaxResponse.success().setResult(token).setMsg("获取成功");
     }
 
     /**
@@ -105,7 +105,7 @@ public class WXInterfaceController {
         String url = tempUrl.replace("CODE",code);
         logger.info("url:{}",url);
         String token = accessTokenService.getWebToken(url);
-        return new AjaxResponse(0,"获取成功",token);
+        return AjaxResponse.success().setResult(token).setMsg("获取成功");
     }
 
     @RequestMapping(method = RequestMethod.GET,path = "/wx/web/userInfo")
@@ -115,7 +115,7 @@ public class WXInterfaceController {
         String url = tempUserInfoUrl.replace("ACCESS_TOKEN",token).replace("OPENID",openId);
         logger.info("url:{}",url);
         String userInfo = accessTokenService.getUserInfo(url);
-        return new AjaxResponse(0,"获取成功",userInfo);
+        return AjaxResponse.success().setResult(userInfo).setMsg("获取成功");
     }
 
 }

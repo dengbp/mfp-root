@@ -41,25 +41,23 @@ public class TopLineController {
     public AjaxResponse apply(@RequestBody TopLine topLine){
         logger.info("begin call apply method...");
         if(StringUtils.isBlank(topLine.getOpenId()) && topLine.getUserId()==null){
-            return new AjaxResponse(1,"用户id不能为空");
+            return AjaxResponse.fail().setMsg("用户id不能为空");
         }
         if(StringUtils.isBlank(topLine.getOpenId())){
-            return new AjaxResponse(1,"openId不能为空");
+            return AjaxResponse.fail().setMsg("openId不能为空");
         }
         Customer customer = userService.searchByOpenId(topLine.getOpenId());
         this.copyProperty(customer,topLine);
         topLineService.save(topLine);
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"报名成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("报名成功");
     }
 
     @RequestMapping(method = RequestMethod.GET,path = "/signed")
     public AjaxResponse signed(Long userId,String openId){
         if(userId==null && StringUtils.isBlank(openId)){
-            return new AjaxResponse(1,"openId和userId不能为空");
+            return AjaxResponse.fail().setMsg("openId和userId不能为空");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"请求成功",topLineService.signed(userId,openId));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(topLineService.signed(userId,openId)).setMsg("请求成功");
     }
 
     /**

@@ -64,7 +64,7 @@ public class CustomMessageController {
         customMessage.setNews(news);
         String token = accessTokenService.getGlobalToken();
         String result = wxMessageService.customSend(customMessage,url,token);
-        return new AjaxResponse(0,"客户消息推送功成",result);
+        return AjaxResponse.success().setResult(result).setMsg("客户消息推送功成");
     }
 
 }

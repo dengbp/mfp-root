@@ -32,7 +32,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ShiroException.class)
     public AjaxResponse handle401(ShiroException e) {
-        return new AjaxResponse(401, e.getMessage(), null);
+        return AjaxResponse.fail(401).setMsg(e.getMessage());
     }
 
     /**
@@ -42,7 +42,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
     public AjaxResponse handle401() {
-        return new AjaxResponse(401, "Unauthorized", null);
+        return AjaxResponse.fail(401).setMsg("Unauthorized");
     }
 
     private HttpStatus getStatus(HttpServletRequest request) {
@@ -62,7 +62,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public AjaxResponse globalException(HttpServletRequest request, Throwable ex) {
-        return new AjaxResponse(getStatus(request).value(), ex.getMessage(), ex.getMessage());
+        return AjaxResponse.fail(getStatus(request).value()).setMsg(ex.getMessage());
     }
     /**
      * 捕捉其他所有异常
@@ -73,7 +73,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public AjaxResponse globalRuntimeException(HttpServletRequest request, Throwable ex) {
-        return new AjaxResponse(getStatus(request).value(), ex.getMessage(), ex.getMessage());
+        return AjaxResponse.fail(getStatus(request).value()).setMsg(ex.getMessage());
     }
 }
 

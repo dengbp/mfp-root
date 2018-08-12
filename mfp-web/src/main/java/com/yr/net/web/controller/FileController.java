@@ -65,19 +65,14 @@ public class FileController {
     @RequestMapping(value = "/file/single/upload")
     @ResponseBody
     public AjaxResponse upload(@RequestParam("file") MultipartFile file,String userId,String purpose) {
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(1);
         if (file.isEmpty()) {
-            ajaxResponse.setMsg("文件为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("文件为空");
         }
         if(purpose == null){
-            ajaxResponse.setMsg("purpose参数不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("purpose参数不能为空");
         }
         if(userId == null){
-            ajaxResponse.setMsg("userId参数不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("userId参数不能为空");
         }
         // 获取文件名
         String originName = file.getOriginalFilename();
@@ -100,8 +95,7 @@ public class FileController {
         if (RegexUtils.checkImages(originName)){
             fileType = 1;
             if(attachmentService.isMaxLimit(new Long(userId),fileType)){
-                ajaxResponse.setMsg("上传文件已达到上限");
-                return ajaxResponse;
+                return AjaxResponse.fail().setMsg("上传文件已达到上限");
             }
             BufferedImage sourceImg = null;
             try {
@@ -119,8 +113,7 @@ public class FileController {
         if (RegexUtils.checkVideo(originName)){
             fileType = 2;
             if(attachmentService.isMaxLimit(new Long(userId),fileType)){
-                ajaxResponse.setMsg("上传文件已达到上限");
-                return ajaxResponse;
+                return AjaxResponse.fail().setMsg("上传文件已达到上限");
             }
             videoPath = absolutePath.concat(userVideoPath).concat(userId).concat("/");
             filePath = videoPath.concat(fileName).concat(suffixName);
@@ -129,8 +122,7 @@ public class FileController {
         }
         if (!isImages && !isVideo){
             logger.error("上传文件格式有误");
-            ajaxResponse.setMsg("上传文件格式有误");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("上传文件格式有误");
         }
         dest = new File(filePath);
         // 检测是否存在目录
@@ -141,17 +133,13 @@ public class FileController {
             file.transferTo(dest);
             Attachment attachment = this.createAttachment(new Long(userId), width,height,size,fileType,suffixName,url);
             userService.setUserMultimedia(attachment,new Integer(purpose).intValue());
-            ajaxResponse.setCode(0);
-            ajaxResponse.setMsg("上传成功");
-            ajaxResponse.setResult(url);
-            return ajaxResponse;
+            return AjaxResponse.success().setMsg("上传成功").setResult(url);
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ajaxResponse.setMsg("上传失败");
-        return ajaxResponse;
+        return AjaxResponse.fail().setMsg("上传失败");
     }
 
 
@@ -189,8 +177,6 @@ public class FileController {
     @RequestMapping(value = "/file/batch/upload", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResponse handleFileUpload(HttpServletRequest request) {
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
         List<MultipartFile> files = ((MultipartHttpServletRequest) request)
                 .getFiles("file");
         MultipartFile file = null;
@@ -208,17 +194,12 @@ public class FileController {
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     stream = null;
-                    ajaxResponse.setCode(1);
-                    ajaxResponse.setMsg("上传失败");
-                    return ajaxResponse;
+                    return AjaxResponse.fail().setMsg("上传失败");
                 }
             } else {
-                ajaxResponse.setCode(1);
-                ajaxResponse.setMsg("上传文件为空");
-                return ajaxResponse;
+                return AjaxResponse.fail().setMsg("上传文件为空");
             }
         }
-        ajaxResponse.setMsg("上传成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("上传成功");
     }
 }

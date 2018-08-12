@@ -76,20 +76,15 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getValidateCode(HttpServletRequest request,HttpServletResponse response, @RequestBody String phone){
         response.setHeader("Access-Control-Allow-Credentials","true");
-        AjaxResponse ajaxResponse = new AjaxResponse();
         log.info("param phone【{}】",phone);
         Map<String,String> map = JSONObject.parseObject(phone,Map.class);
         phone = map.get("phone");
         if(!RegexUtils.checkMobile(phone)){
             log.info("手机号码校验失败");
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("手机号码不正确");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("手机号码不正确");
         }
         String code = RandomStringUtils.random(4, "0123456789");
         long time = System.currentTimeMillis();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setMsg(code.concat("_").concat(time+"").concat("_").concat(phone));
         request.getSession().setAttribute("code",code);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("account",account);
@@ -99,7 +94,7 @@ public class UsersController {
         String data = jsonObject.toJSONString();
         HttpUtils.sendByPost(validateCodeUrl,data);
         log.info("发送验证码成功");
-        return ajaxResponse;
+        return  AjaxResponse.success().setMsg(code.concat("_").concat(time+"").concat("_").concat(phone));
     }
 
     /**
@@ -110,9 +105,8 @@ public class UsersController {
     @PostMapping("/signIn")
     @ResponseBody
     public AjaxResponse login(HttpServletRequest request,@RequestBody UserInfoReq userInfoReq) {
-        AjaxResponse ajaxResponse = new AjaxResponse();
+        AjaxResponse ajaxResponse = AjaxResponse.fail();
         if(!this.validate(request,ajaxResponse,userInfoReq)){
-            ajaxResponse.setCode(1);
             return ajaxResponse;
         }
         UsersBean usersBean = userService.findByPhone(userInfoReq.getPhone());
@@ -120,7 +114,7 @@ public class UsersController {
             String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
             LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
             log.info("登录成功，返回结果【{}】",JSONObject.toJSONString(loginResp));
-            return new AjaxResponse(200, "Login success", loginResp);
+            return AjaxResponse.success().setResult(loginResp).setMsg("登录成功");
         } else {
             Customer customer = new Customer();
             customer.setPhone(userInfoReq.getPhone());
@@ -130,7 +124,7 @@ public class UsersController {
             customer = userService.saveOrUpdate(customer);
             String token = JWTUtil.sign(userInfoReq.getPhone(), customer.getPassword());
             LoginResp loginResp = new LoginResp(customer.getId(),customer.getRole()==null?new Integer(-1):new Integer(customer.getRole()),token);
-            return new AjaxResponse(200, "Login success", loginResp);
+            return AjaxResponse.success().setResult(loginResp).setMsg("登录成功");
         }
     }
 
@@ -143,21 +137,14 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse binging(@RequestBody RoleSettingReq roleSettingReq){
         log.info("请求参数:id[{}],token[{}],role[{}]",roleSettingReq.getUserId(),roleSettingReq.getToken(),roleSettingReq.getRole());
-        AjaxResponse ajaxResponse = new AjaxResponse();
         if (null == roleSettingReq.getUserId()){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("用户id为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("用户id为空");
         }
         if (null == roleSettingReq.getRole()){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("用户角色为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("用户角色为空");
         }
         userService.updateRoleById(roleSettingReq.getUserId(),roleSettingReq.getRole());
-        ajaxResponse.setCode(0);
-        ajaxResponse.setMsg("角色绑定成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("角色绑定成功");
     }
 
     /**
@@ -213,7 +200,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse saveWXcustomer(WXCustomer wxCustomer){
         wxCustomerService.save(wxCustomer);
-        return new AjaxResponse(0,"保存用户信息成功",null);
+        return AjaxResponse.success().setMsg("保存用户信息成功");
     }
 
     /**
@@ -225,7 +212,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getCustomerByOpenId(String openId){
         UsersBean usersBean = userService.findByOpenId(openId);
-        return new AjaxResponse(0,"获取用户信息成功",usersBean);
+        return AjaxResponse.success().setResult(usersBean).setMsg("获取用户信息成功");
     }
 
     /**
@@ -237,7 +224,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse checkInfo(String openId){
         boolean b = userService.checkInfo(openId);
-        return new AjaxResponse(0,"获取用户信息成功",b);
+        return AjaxResponse.success().setResult(b).setMsg("获取用户信息成功");
     }
 
     /**
@@ -249,7 +236,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getCustomerByPhone(String phone){
         UsersBean usersBean = userService.findByPhone(phone);
-        return new AjaxResponse(0,"获取用户信息成功",usersBean);
+        return AjaxResponse.success().setResult(usersBean).setMsg("获取用户信息成功");
     }
 
     /**
@@ -262,7 +249,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse insertOpenId(Long id,String openId){
         userService.updateOpenIdById(id,openId);
-        return new AjaxResponse(0,"更新成功",null);
+        return AjaxResponse.success().setMsg("更新成功");
     }
 
 
@@ -282,10 +269,7 @@ public class UsersController {
         Map<String,Object> criteria = new HashMap<String,Object>();
         criteria.put("sex",sex);
         Page<Customer> page =  userService.findUserCriteria(pageNo,pageSize, criteria);
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setResult(page);
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(page);
     }
 
     /**
@@ -296,22 +280,15 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.GET,path = "/users/info")
     @ResponseBody
     public AjaxResponse getUserInfo(Long id) {
-        AjaxResponse ajaxResponse = new AjaxResponse();
         log.info("call getUserInfo method...");
-        ajaxResponse.setCode(1);
-        ajaxResponse.setMsg("id is null");
-        if(id != null){
-            ajaxResponse.setCode(0);
-            ajaxResponse.setMsg("成功");
-            UsersBean usersBean = userService.findById(id);
-            if (null == usersBean){
-                ajaxResponse.setCode(401);
-                ajaxResponse.setMsg("没有此用户，id【"+id.longValue()+"】");
-                return ajaxResponse;
-            }
-            ajaxResponse.setResult(usersBean);
+        if (null == id){
+            return AjaxResponse.fail().setMsg("id is null");
         }
-        return ajaxResponse;
+        UsersBean usersBean = userService.findById(id);
+        if (null == usersBean){
+            return AjaxResponse.fail(401).setMsg("没有此用户，id【"+id.longValue()+"】");
+        }
+        return AjaxResponse.success().setResult(usersBean).setMsg("成功");
     }
 
     /**
@@ -334,12 +311,9 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getUserHeadPic(Long id){
         if(id==null){
-            AjaxResponse ajaxResponse = new AjaxResponse(1,"id不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("id不能为空");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"获取用户头像成功");
-        ajaxResponse.setResult(userService.findHeadPortraitById(id));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(userService.findHeadPortraitById(id)).setMsg("获取用户头像成功");
     }
 
     /**
@@ -351,12 +325,9 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getBackground(Long id){
         if(id==null){
-            AjaxResponse ajaxResponse = new AjaxResponse(1,"id不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("id不能为空");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"获取用户背景图成功");
-        ajaxResponse.setResult(userService.findBackdropById(id));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(userService.findBackdropById(id)).setMsg("获取用户背景图成功");
     }
 
     /**
@@ -369,12 +340,9 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getAlbum(Long id,Integer fileType){
         if(id==null || fileType==null){
-            AjaxResponse ajaxResponse = new AjaxResponse(1,"id或fileType不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("id或fileType不能为空");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"获取用户相册成功");
-        ajaxResponse.setResult(attachmentService.findByCondition(id,fileType));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(attachmentService.findByCondition(id,fileType)).setMsg("获取用户相册成功");
     }
 
     /**
@@ -387,12 +355,9 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getVideo(Long id,Integer fileType){
         if(id==null || fileType==null){
-            AjaxResponse ajaxResponse = new AjaxResponse(1,"id或fileType不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("id或fileType不能为空");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"获取用户视频成功");
-        ajaxResponse.setResult(attachmentService.findByCondition(id,fileType));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(attachmentService.findByCondition(id,fileType)).setMsg("获取用户视频成功");
     }
 
     /**
@@ -404,8 +369,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse deleteFile(HttpServletRequest request,String idStr){
         if(StringUtils.isBlank(idStr)){
-            AjaxResponse ajaxResponse = new AjaxResponse(1,"id不能为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("id不能为空");
         }
         String[] ids = idStr.split(",");
         List<Attachment> list = new ArrayList<>();
@@ -415,8 +379,7 @@ public class UsersController {
             list.add(attachment);
         }
         attachmentService.deleteBatch(list);
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"删除文件成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("删除文件成功");
     }
 
     /**
@@ -428,7 +391,7 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse edit(@RequestBody UserInfoReq userInfoReq){
         log.info(JSONObject.toJSONString(userInfoReq));
-        return new AjaxResponse(0,"成功");
+        return AjaxResponse.success().setMsg("成功");
     }
 
     /**
@@ -440,6 +403,6 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse updateUserTest(UsersBean usersBean){
         log.info(usersBean.toString());
-        return new AjaxResponse(0,"成功");
+        return AjaxResponse.success().setMsg("成功");
     }
 }

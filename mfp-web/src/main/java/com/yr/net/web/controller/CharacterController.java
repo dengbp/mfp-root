@@ -32,11 +32,7 @@ public class CharacterController {
     @RequestMapping(method = RequestMethod.GET,path = "/character/list")
     @ResponseBody
     public AjaxResponse characterList(){
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setResult(characterService.findAll());
-        ajaxResponse.setMsg("成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(characterService.findAll()).setMsg("成功");
     }
 
 }

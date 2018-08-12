@@ -53,20 +53,18 @@ public class PartyController {
      */
     @PostMapping("/public")
     public AjaxResponse partyPublic(@RequestBody @Valid PartyApplyReq partyApplyReq) throws Exception {
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"发布成功");
+        AjaxResponse ajaxResponse = AjaxResponse.fail();
         if (validatePublicInfo(partyApplyReq,ajaxResponse)){
-            ajaxResponse.setCode(1);
             return ajaxResponse;
         }
-        ajaxResponse.setCode(0);
         if (partyApplyReq.getPartyType().intValue()==1){
             partyApplyReq.setEnrollMax(2);
             partyApplyReq.setMaleMax(1);
             partyApplyReq.setFemaleMax(1);
-            ajaxResponse.setMsg("约会申请/发布成功");
+            AjaxResponse.success().setMsg("约会申请/发布成功");
         }
         if (partyApplyReq.getPartyType().intValue()==2){
-            ajaxResponse.setMsg("活动申请/发布成功");
+            AjaxResponse.success().setMsg("活动申请/发布成功");
         }
         partyService.save(partyApplyReq);
         return ajaxResponse;
@@ -159,13 +157,12 @@ public class PartyController {
     @RequestMapping(method = RequestMethod.POST,path = "/join")
     public AjaxResponse join(@RequestBody JoinPartyReq joinPartyReq){
        if(StringUtils.isBlank(joinPartyReq.getOpenId()) && joinPartyReq.getUserId()==null){
-           return new AjaxResponse(1,"用户信息不能为空");
+           return AjaxResponse.fail().setMsg("用户信息不能为空");
        }
         if(StringUtils.isBlank(joinPartyReq.getPartyCode()) && joinPartyReq.getPartyId()==null){
-            return new AjaxResponse(1,"活动信息不能为空");
+            return AjaxResponse.fail().setMsg("活动信息不能为空");
         }
         logger.info("请求参数:openId[{}],partyId[{}]",joinPartyReq.getOpenId(),joinPartyReq.getPartyId());
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"报名成功");
         Customer customer = null;
         if(StringUtils.isNotBlank(joinPartyReq.getOpenId())){
             customer = userService.findCustomerByOpenId(joinPartyReq.getOpenId());
@@ -173,17 +170,16 @@ public class PartyController {
             customer = userService.findCustomerById(joinPartyReq.getUserId());
         }
         if(customer == null){
-            return new AjaxResponse(1,"用户还没注册");
+            return AjaxResponse.fail().setMsg("用户还没注册");
         }
         Enroll enroll = new Enroll();
         this.copyProperty(customer,joinPartyReq,enroll);
         if (partyService.saveOrUpdate(enroll)){
-            ajaxResponse.setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,客服人员将会与您联系确认" , joinPartyReq.getPartyCode()));
+            return AjaxResponse.success().setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,客服人员将会与您联系确认" , joinPartyReq.getPartyCode()));
         }else{
-            ajaxResponse.setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , joinPartyReq.getPartyCode()));
+            return AjaxResponse.success().setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , joinPartyReq.getPartyCode()));
 
         }
-        return ajaxResponse;
     }
 
 
@@ -210,26 +206,19 @@ public class PartyController {
     @ResponseBody
     public AjaxResponse join2(HttpServletRequest request, String phone, String code, String codeTime, String partyId){
         logger.info("请求参数:phone[{}],code[{}],codeTime[{}],partyId[{}]",phone,code,codeTime,partyId);
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(1);
         String[] preCode = codeTime.split("_");
         if (preCode.length != 3){
-            ajaxResponse.setMsg("先获取手机验证码");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("先获取手机验证码");
         }
         if(!RegexUtils.checkMobile(phone)){
-            ajaxResponse.setMsg("手机号码格式不正确");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("手机号码格式不正确");
         }
         if (!StringUtils.equals(phone,preCode[2])){
-            ajaxResponse.setMsg("手机号码校验不通过");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("手机号码校验不通过");
         }
         String id = (String) request.getSession().getAttribute("code");
-        ajaxResponse.setMsg("验证码验证失败,请重新获取验证码");
         long current = System.currentTimeMillis();
         if(id.equals(code) && (current - new Long(preCode[1]).longValue())<1000 * 60 * 2){
-            ajaxResponse.setCode(0);
             Customer customer = new Customer();
             customer.setPhone(phone);
             customer = userService.saveOrUpdate(customer);
@@ -238,13 +227,13 @@ public class PartyController {
             enroll.setPartyCode(partyId);
             enroll.setPhone(phone);
             if (partyService.saveOrUpdate(enroll)){
-                ajaxResponse.setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,稍后客服人员将会与您联系确认" , partyId));
+                return AjaxResponse.success().setMsg(MessageFormat.format("您报名的活动编号是：{0},已报名成功,稍后客服人员将会与您联系确认" , partyId));
             }else{
-                ajaxResponse.setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , partyId));
+                return AjaxResponse.success().setMsg(MessageFormat.format("编号是：{0}的活动,您已经报名，不能重复报名" , partyId));
 
             }
         }
-        return ajaxResponse;
+        return AjaxResponse.fail().setMsg("验证码验证失败,请重新获取验证码");
     }
 
 
@@ -285,9 +274,7 @@ public class PartyController {
     @GetMapping("/theme/query")
     public AjaxResponse queryTheme(@RequestParam("themeType") Integer themeType){
         List<PartyTheme> list = partyThemeService.findByType(themeType);
-        AjaxResponse ajaxResponse = new AjaxResponse(0,"查询成功");
-        ajaxResponse.setResult(list);
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(list).setMsg("查询成功");
     }
 
 

@@ -39,13 +39,9 @@ public class GoodsController {
     public AjaxResponse goodsList(@RequestParam("typeId") Long typeId){
         log.info("call goodsList method typeId[{}]...",typeId);
         if (typeId==null){
-            return new AjaxResponse(1,"typeId is blank");
+            return AjaxResponse.fail().setMsg("typeId is blank");
         }
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setResult(goodsService.findByTypeId(typeId));
-        ajaxResponse.setMsg("成功");
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("成功").setResult(goodsService.findByTypeId(typeId));
     }
 
     @RequestMapping(method = RequestMethod.GET,path = "/goods/list/typeIds")
@@ -53,7 +49,7 @@ public class GoodsController {
     public AjaxResponse goodsList(@RequestParam("typeIds") String typeIds){
         log.info("call goodsList method  typeIds[{}]...",typeIds);
         if (StringUtils.isBlank(typeIds)){
-            return new AjaxResponse(1,"typeIds is blank");
+            return AjaxResponse.fail().setMsg("typeIds is blank");
         }
         String[] strings = typeIds.split(",");
         Long[] longs = new Long[strings.length];
@@ -62,11 +58,7 @@ public class GoodsController {
             int index = list.indexOf(e);
             longs[index] = Long.valueOf(strings[index]);
         });
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setResult(goodsService.findByIdTypeIds(longs));
-        ajaxResponse.setMsg("成功");
-        return ajaxResponse;
+       return AjaxResponse.success().setMsg("成功").setResult(goodsService.findByIdTypeIds(longs));
     }
 
 }

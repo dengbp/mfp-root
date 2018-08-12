@@ -147,8 +147,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         //将实体对象转换为JSON Object转换
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        AjaxResponse responseBean = new AjaxResponse(401, "Unauthorized", null);
-        resp.getWriter().write(JSONObject.toJSONString(responseBean));
+        resp.getWriter().write(JSONObject.toJSONString(AjaxResponse.fail(401).setMsg("Unauthorized")));
         resp.getWriter().flush();
         resp.getWriter().close();
     }

@@ -35,26 +35,16 @@ public class IndustryController {
     @RequestMapping(method = RequestMethod.GET,path = "/industry/list")
     @ResponseBody
     public AjaxResponse industryList(){
-        AjaxResponse ajaxResponse = new AjaxResponse();
-        ajaxResponse.setCode(0);
-        ajaxResponse.setMsg("成功");
         List<Industry> industryList = industryService1.getIndustry();
-        ajaxResponse.setResult(industryList);
-        return ajaxResponse;
+        return AjaxResponse.success().setMsg("成功").setResult(industryList);
     }
 
     @RequestMapping(method = RequestMethod.GET,path = "/jobTitle/list")
     @ResponseBody
     public AjaxResponse jobTitleList(Integer type){
-        AjaxResponse ajaxResponse = new AjaxResponse();
         if (type == null){
-            ajaxResponse.setCode(1);
-            ajaxResponse.setMsg("行业类型为空");
-            return ajaxResponse;
+            return AjaxResponse.fail().setMsg("行业类型为空");
         }
-        ajaxResponse.setCode(0);
-        ajaxResponse.setMsg("成功");
-        ajaxResponse.setResult(industryService1.getJobTitle(type));
-        return ajaxResponse;
+        return AjaxResponse.success().setResult(industryService1.getJobTitle(type)).setMsg("成功");
     }
 }
