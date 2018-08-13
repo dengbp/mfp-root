@@ -60,7 +60,7 @@ public class MyRealm extends AuthorizingRealm {
         Set<String> userPermissions = new HashSet<>();
         UsersBean user = userService.findByPhone(phone);
         if(null != user){
-            userRoles.add(user.getRole());
+            userRoles.add(user.getRole().toString());
             SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
             simpleAuthorizationInfo.addRoles(userRoles);
             if(null != user.getPermission() && user.getPermission().split(",").length > 0){

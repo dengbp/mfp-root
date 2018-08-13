@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -39,6 +40,9 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Value("${spring.redis.pool.max-idle}")
     private int maxIdle;
 
+    @Value("${spring.redis.pool.min-idle:2}")
+    private int minIdle;
+
     @Value("${spring.redis.pool.max-wait}")
     private long maxWaitMillis;
 
@@ -50,11 +54,21 @@ public class RedisConfig extends CachingConfigurerSupport {
         logger.info("JedisPoo开始注入！！");
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMinIdle(minIdle);
         jedisPoolConfig.setMaxWaitMillis(maxWaitMillis);
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
         logger.info("JedisPool注入成功！！");
         logger.info("redis地址：" + host + ":" + port);
         return jedisPool;
+    }
+
+    /**
+     * Jedis创建
+     * @return Jedis
+     */
+    @Bean
+    public Jedis getJedis(){
+        return redisPoolFactory().getResource();
     }
 
 }

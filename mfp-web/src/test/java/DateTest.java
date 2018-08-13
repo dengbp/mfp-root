@@ -18,6 +18,9 @@ import com.yr.net.util.AgeUtils;
 public class DateTest {
 
     public static void main(String[] args) throws ParseException {
+        Integer i = new Integer(0);
+        System.out.println(i.toString());
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse("1984-04-09");
 

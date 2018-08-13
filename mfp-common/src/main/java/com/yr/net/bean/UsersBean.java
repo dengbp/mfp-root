@@ -50,6 +50,9 @@ public class UsersBean {
 
 
     private String token;
-    private String role;
+    /**
+     * 角色。0：相亲；1：红娘
+     */
+    private Integer role;
     private String permission;
 }
