@@ -1,4 +1,4 @@
-package com.yr.net.service.impl;
+package com.yr.net.service;
 
 import com.yr.net.entity.Enroll;
 import com.yr.net.entity.PartyApply;
@@ -7,12 +7,12 @@ import com.yr.net.repository.EnrollRepository;
 import com.yr.net.repository.PartyRepository;
 import com.yr.net.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +29,6 @@ import java.util.Optional;
  */
 @Service
 public class PartyService {
-    Logger logger = LoggerFactory.getLogger(PartyService.class);
     @Resource
     private EnrollRepository enrollRepository;
     @Resource
@@ -51,24 +50,37 @@ public class PartyService {
 
     /**
      * 保存活动发布
-     * @param partyApplyReq
-     * @throws Exception
+     * @param partyApplyReq 活动信息
+     * @throws Exception 业务异常
      */
     public void save(PartyApplyReq partyApplyReq) throws Exception {
-        PartyApply partyApply = partyApplyReq;
         if (StringUtils.isNotBlank(partyApplyReq.getBeginTimeStr())){
             Date beginTime = DateUtil.getdate1(partyApplyReq.getBeginTimeStr());
-            partyApply.setBeginTime(beginTime);
+            partyApplyReq.setBeginTime(beginTime);
         }
         if (StringUtils.isNotBlank(partyApplyReq.getEndTimeStr())){
             Date endTime = DateUtil.getdate1(partyApplyReq.getEndTimeStr());
-            partyApply.setEndTime(endTime);
+            partyApplyReq.setEndTime(endTime);
         }
         if (StringUtils.isNotBlank(partyApplyReq.getConductTimeStr())){
             Date condUctTime = DateUtil.getdate1(partyApplyReq.getConductTimeStr());
-            partyApply.setConductTime(condUctTime);
+            partyApplyReq.setConductTime(condUctTime);
         }
-        partyApply.setCreateTime(new Date());
-        partyRepository.save(partyApplyReq);
+        partyApplyReq.setCreateTime(new Date());
+        partyRepository.save((PartyApply) partyApplyReq);
+    }
+
+    /**
+     * 根据id、类型查活动列表
+     * @param id id
+     * @param partyType partyType
+     * @return list party
+     */
+    public List<PartyApply> queryByType(Long id,Integer partyType){
+        List<PartyApply> list = partyRepository.findByIdAndPartyType(id,partyType);
+        if(list.isEmpty()){
+            return new ArrayList<>();
+        }
+        return list;
     }
 }

@@ -1,7 +1,7 @@
 package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
-import com.yr.net.service.impl.InterestService;
+import com.yr.net.service.InterestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Method;
 
 /**
  * All rights Reserved, Designed By SEGI

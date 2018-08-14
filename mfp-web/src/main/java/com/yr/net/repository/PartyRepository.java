@@ -4,6 +4,8 @@ import com.yr.net.entity.PartyApply;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 /**
  * All rights Reserved, Designed By SEGI
  * <pre>
@@ -17,4 +19,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * </p>
  */
 public interface PartyRepository  extends JpaRepository<PartyApply, Long>,JpaSpecificationExecutor<PartyApply> {
+
+    /**
+     * 根据id、类型查活动列表
+     * @param id id
+     * @param partyType partyType
+     * @return list party
+     */
+     List<PartyApply> findByIdAndPartyType(Long id,Integer partyType);
 }

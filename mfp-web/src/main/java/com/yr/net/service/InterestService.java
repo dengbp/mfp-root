@@ -1,4 +1,4 @@
-package com.yr.net.service.impl;
+package com.yr.net.service;
 
 import com.yr.net.entity.Interest;
 import com.yr.net.repository.InterestRepository;

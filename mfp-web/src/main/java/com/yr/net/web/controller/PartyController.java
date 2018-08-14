@@ -7,8 +7,8 @@ import com.yr.net.entity.PartyTheme;
 import com.yr.net.model.JoinPartyReq;
 import com.yr.net.model.PartyApplyReq;
 import com.yr.net.service.UserService;
-import com.yr.net.service.impl.PartyService;
-import com.yr.net.service.impl.PartyThemeService;
+import com.yr.net.service.PartyService;
+import com.yr.net.service.PartyThemeService;
 import com.yr.net.util.RegexUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -68,6 +68,17 @@ public class PartyController {
         }
         partyService.save(partyApplyReq);
         return ajaxResponse;
+    }
+
+    /**
+     * 活动、约会查询接口
+     * @param partyType 活动类型：1：约会；2：活动
+     * @param id id
+     * @return 查结果
+     */
+    @GetMapping("/query")
+    public AjaxResponse query(@RequestParam(value = "id")Long id,@RequestParam(value = "partyType") Integer partyType){
+        return AjaxResponse.success().setResult(partyService.queryByType(id,partyType)).setMsg("查询成功");
     }
 
     private boolean validatePublicInfo(PartyApplyReq partyApplyReq,AjaxResponse ajaxResponse){

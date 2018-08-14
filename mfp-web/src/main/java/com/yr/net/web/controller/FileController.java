@@ -2,9 +2,8 @@ package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.entity.Attachment;
-import com.yr.net.entity.Customer;
 import com.yr.net.service.UserService;
-import com.yr.net.service.impl.AttachmentService;
+import com.yr.net.service.AttachmentService;
 import com.yr.net.util.RegexUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * All rights Reserved, Designed By SEGI

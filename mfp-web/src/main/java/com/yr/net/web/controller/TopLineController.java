@@ -4,7 +4,7 @@ import com.yr.net.bean.AjaxResponse;
 import com.yr.net.entity.Customer;
 import com.yr.net.entity.TopLine;
 import com.yr.net.service.UserService;
-import com.yr.net.service.impl.TopLineService;
+import com.yr.net.service.TopLineService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

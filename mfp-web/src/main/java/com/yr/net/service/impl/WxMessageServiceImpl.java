@@ -3,6 +3,7 @@ package com.yr.net.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.yr.net.http.HttpUtils;
 import com.yr.net.model.CustomMessage;
+import com.yr.net.service.AccessTokenService;
 import com.yr.net.service.WxMessageService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -15,7 +16,6 @@ import weixin.popular.api.MessageAPI;
 import weixin.popular.bean.message.templatemessage.TemplateMessage;
 import weixin.popular.bean.message.templatemessage.TemplateMessageItem;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;

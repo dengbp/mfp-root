@@ -1,4 +1,4 @@
-package com.yr.net.service.impl;
+package com.yr.net.service;
 
 import com.yr.net.entity.Goods;
 import com.yr.net.repository.GoodsRepository;

@@ -5,6 +5,7 @@ import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
 import com.yr.net.entity.Customer;
 import com.yr.net.repository.CustomerRepository;
+import com.yr.net.service.AttachmentService;
 import com.yr.net.service.UserService;
 import com.yr.net.util.AgeUtils;
 import com.yr.net.util.RegexUtils;

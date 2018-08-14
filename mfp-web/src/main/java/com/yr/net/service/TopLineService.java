@@ -1,11 +1,10 @@
-package com.yr.net.service.impl;
+package com.yr.net.service;
 
 import com.yr.net.entity.Goods;
 import com.yr.net.entity.OrderEntity;
 import com.yr.net.entity.TopLine;
 import com.yr.net.enums.GoodsType;
 import com.yr.net.repository.TopLineRepository;
-import com.yr.net.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

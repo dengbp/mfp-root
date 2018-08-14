@@ -1,4 +1,4 @@
-package com.yr.net.service.impl;
+package com.yr.net.service;
 
 import com.yr.net.entity.PartyTheme;
 import com.yr.net.repository.PartyThemeRepository;

@@ -1,8 +1,7 @@
 package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
-import com.yr.net.service.impl.CharacterService;
-import com.yr.net.service.impl.GoodsService;
+import com.yr.net.service.GoodsService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
