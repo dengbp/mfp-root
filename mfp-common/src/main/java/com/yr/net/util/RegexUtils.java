@@ -84,7 +84,7 @@ public class RegexUtils {
      * <p>全球星：1349</p>
      * <p>虚拟运营商：170</p>
      */
-    public static final String REGEX_MOBILE_EXACT  = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|(147))\\d{8}$";
+    public static final String REGEX_MOBILE_EXACT  = "^(0|86|17951)?(13[0-9]|15[012356789]|16[6]|19[89]]|17[01345678]|18[0-9]|14[579])[0-9]{8}$";
     /**
      * 正则：电话号码
      */

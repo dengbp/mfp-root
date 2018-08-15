@@ -19,6 +19,10 @@ public class RegexUtilsTest
 
     public static void main(String[] args){
 
+        if(!RegexUtils.checkMobile("16620832579")){
+            System.out.println("手机号码校验失败");
+        }
+
 //        System.out.println(RegexUtils.checkIDNumber("452626199909091999"));
 //        System.out.println(RegexUtils.checkMobile("13530051353"));
         System.out.println(RegexUtils.checkImages("公众号二围马.jpg"));
