@@ -66,7 +66,12 @@ public class PartyService {
             Date condUctTime = DateUtil.getdate1(partyApplyReq.getConductTimeStr());
             partyApplyReq.setConductTime(condUctTime);
         }
-        partyApplyReq.setCreateTime(new Date());
+        /**
+         * 表示新增
+         */
+        if(partyApplyReq.getId()==null){
+            partyApplyReq.setCreateTime(new Date());
+        }
         partyRepository.save((PartyApply) partyApplyReq);
     }
 

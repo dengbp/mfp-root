@@ -273,7 +273,7 @@ public class UsersController {
     }
 
     /**
-     * 根据id获取用户资料
+     * 根据id获取用户资料(需要token)
      * @param id id
      * @return 用户资料
      */
@@ -281,6 +281,25 @@ public class UsersController {
     @ResponseBody
     public AjaxResponse getUserInfo(Long id) {
         log.info("call getUserInfo method...");
+        if (null == id){
+            return AjaxResponse.fail().setMsg("id is null");
+        }
+        UsersBean usersBean = userService.findById(id);
+        if (null == usersBean){
+            return AjaxResponse.fail(401).setMsg("没有此用户，id【"+id.longValue()+"】");
+        }
+        return AjaxResponse.success().setResult(usersBean).setMsg("成功");
+    }
+
+    /**
+     * 根据id获取用户资料(不需要token)
+     * @param id id
+     * @return 用户资料
+     */
+    @RequestMapping(method = RequestMethod.GET,path = "/users/view")
+    @ResponseBody
+    public AjaxResponse userView(Long id) {
+        log.info("call userView method...");
         if (null == id){
             return AjaxResponse.fail().setMsg("id is null");
         }

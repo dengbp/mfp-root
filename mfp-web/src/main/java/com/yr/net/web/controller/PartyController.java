@@ -46,7 +46,7 @@ public class PartyController {
     PartyThemeService partyThemeService;
 
     /**
-     * 活动，约会申请发布接口
+     * 活动，约会申请发布、修改接口
      * @param partyApplyReq partyApplyReq
      * @return 响应结果
      * @throws Exception 业务异常
