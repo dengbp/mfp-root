@@ -7,6 +7,7 @@ import com.yr.net.repository.EnrollRepository;
 import com.yr.net.repository.PartyRepository;
 import com.yr.net.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -72,7 +73,9 @@ public class PartyService {
         if(partyApplyReq.getId()==null){
             partyApplyReq.setCreateTime(new Date());
         }
-        partyRepository.save((PartyApply) partyApplyReq);
+        PartyApply partyApply = new PartyApply();
+        BeanUtils.copyProperties(partyApplyReq,partyApply);
+        partyRepository.save(partyApply);
     }
 
     /**
