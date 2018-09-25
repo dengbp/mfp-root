@@ -61,10 +61,10 @@ public class PartyController {
             partyApplyReq.setEnrollMax(2);
             partyApplyReq.setMaleMax(1);
             partyApplyReq.setFemaleMax(1);
-            AjaxResponse.success().setMsg("约会申请/发布成功");
+            ajaxResponse = AjaxResponse.success().setMsg("约会申请/发布成功");
         }
         if (partyApplyReq.getPartyType().intValue()==2){
-            AjaxResponse.success().setMsg("活动申请/发布成功");
+            ajaxResponse = AjaxResponse.success().setMsg("活动申请/发布成功");
         }
         partyService.save(partyApplyReq);
         return ajaxResponse;
