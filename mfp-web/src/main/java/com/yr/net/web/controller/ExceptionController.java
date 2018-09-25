@@ -2,6 +2,7 @@ package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  *     异常处理
  * </p>
  */
+@Slf4j
 @RestControllerAdvice
 public class ExceptionController {
 
@@ -62,6 +64,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public AjaxResponse globalException(HttpServletRequest request, Throwable ex) {
+        log.error(ex.getMessage());
         return AjaxResponse.fail(getStatus(request).value()).setMsg(ex.getMessage());
     }
     /**
@@ -73,6 +76,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public AjaxResponse globalRuntimeException(HttpServletRequest request, Throwable ex) {
+        log.error(ex.getMessage());
         return AjaxResponse.fail(getStatus(request).value()).setMsg(ex.getMessage());
     }
 }
