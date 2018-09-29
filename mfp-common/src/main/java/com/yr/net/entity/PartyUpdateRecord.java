@@ -62,4 +62,17 @@ public class PartyUpdateRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 被约者id
+     */
+    private Long secondId;
+    /**
+     * 向对方约会申请结果
+     */
+    private String datingResults;
+    /**
+     * 发布者id
+     */
+    private Long publisherId;
+
 }

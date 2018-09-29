@@ -6,10 +6,12 @@ import com.yr.net.entity.Enroll;
 import com.yr.net.entity.PartyTheme;
 import com.yr.net.model.JoinPartyReq;
 import com.yr.net.model.PartyApplyReq;
+import com.yr.net.service.PartyRefuseService;
 import com.yr.net.service.UserService;
 import com.yr.net.service.PartyService;
 import com.yr.net.service.PartyThemeService;
 import com.yr.net.util.RegexUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,7 @@ import java.util.List;
  *     参加约会、活动控制器
  * </p>
  */
+@Slf4j
 @RestController
 @RequestMapping("/party")
 public class PartyController {
@@ -44,6 +47,13 @@ public class PartyController {
     PartyService partyService;
     @Resource
     PartyThemeService partyThemeService;
+    @Resource
+    PartyRefuseService partyRefuseService;
+
+    @GetMapping("/getRefuse")
+    public AjaxResponse getRefuse(@RequestParam(value = "typeId") Integer typeId){
+        return AjaxResponse.success().setResult( partyRefuseService.queryByType(typeId));
+    }
 
     /**
      * 活动，约会申请发布、修改接口
@@ -102,6 +112,14 @@ public class PartyController {
         if (StringUtils.isBlank(partyApplyReq.getPartyContent())){
             ajaxResponse.setMsg("活动内容不能为空");
             return true;
+        }
+        if(1==partyApplyReq.getPartyType().intValue()){
+            if (partyApplyReq.getSecondId()==null){
+                if(null == partyApplyReq.getEnrollMax()){
+                    ajaxResponse.setMsg("被约人id不能为空");
+                    return true;
+                }
+            }
         }
         /*活动类型校验*/
         if (partyApplyReq.getPartyType().intValue()==2){
@@ -264,16 +282,6 @@ public class PartyController {
         }
         enroll.setWechatNickName(customer.getWeChartNickName());
     }
-
-
-
-
-
-
-
-
-
-
 
 
 

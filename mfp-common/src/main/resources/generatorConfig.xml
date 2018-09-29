@@ -46,7 +46,6 @@
 
        <table schema="friends_party" tableName="yr_party_apply" domainObjectName="PartyApply"/>
        <table schema="friends_party" tableName="yr_party_update_record" domainObjectName="PartyUpdateRecord"/>
-       <table schema="friends_party" tableName="yr_enroll" domainObjectName="Enroll"/>
 
     </context>
 </generatorConfiguration>

@@ -126,5 +126,13 @@ public class PartyApply implements Serializable {
     private Integer partyType;
 
     private static final long serialVersionUID = 1L;
+    /**
+     * 被约者id
+     */
+    private Long secondId;
+    /**
+     * 向对方约会申请结果
+     */
+    private String datingResults;
 
 }
