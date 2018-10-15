@@ -180,16 +180,7 @@ public class UserServiceImpl implements UserService{
         if(optional.isPresent()) {
             Customer customer = (Customer) optional.get();
             String album = customer.getPic();
-            if(StringUtils.isNotBlank(album)){
-                String[] albumUrls = album.split(",");
-                if(albumUrls.length>0 && StringUtils.isBlank(albumUrls[0])){
-                    album = album.substring(1);
-                }
-                if (albumUrls.length>1 && StringUtils.isBlank(albumUrls[1])){
-                    album = album.substring(1);
-                }
-                return album;
-            }
+            return this.removeLastChar(album);
         }
         return null;
     }
@@ -200,16 +191,26 @@ public class UserServiceImpl implements UserService{
         if(optional.isPresent()) {
             Customer customer = (Customer) optional.get();
             String videos = customer.getVideo();
-            if(StringUtils.isNotBlank(videos)){
-                String[] videoUrls = videos.split(",");
-                if(videoUrls.length>0 && StringUtils.isBlank(videoUrls[0])){
-                    videos = videos.substring(1);
-                }
-                if (videoUrls.length>1 && StringUtils.isBlank(videoUrls[1])){
-                    videos = videos.substring(1);
-                }
-                return videos;
+            return this.removeLastChar(videos);
+        }
+        return null;
+    }
+
+    /**
+     * 删除最后逗号处理
+     * @param str 待处理的字符串
+     * @return 处理后的串
+     */
+    private String removeLastChar(String str){
+        if(StringUtils.isNotBlank(str)){
+            String[] videoUrls = str.split(",");
+            if(videoUrls.length>0 && StringUtils.isBlank(videoUrls[0])){
+                str = str.substring(1);
             }
+            if (videoUrls.length>1 && StringUtils.isBlank(videoUrls[1])){
+                str = str.substring(1);
+            }
+            return str;
         }
         return null;
     }
