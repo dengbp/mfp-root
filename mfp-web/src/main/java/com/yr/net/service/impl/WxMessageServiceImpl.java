@@ -33,7 +33,7 @@ public class WxMessageServiceImpl implements WxMessageService {
 
     @Override
     public void sendBuySuccessMsg(Map<String, String> mapData) throws ParseException {
-        logger.info("开始发送模板消息");
+        logger.info("开始发送支付成功通知消息");
         String orderId = mapData.get("out_trade_no");
         TemplateMessage templateMessage = new TemplateMessage();
         templateMessage.setTemplate_id("UXdVimzD7liALwhL_vuH1ym_BbJeF5hfaY4ZBlUi3VY");
@@ -44,7 +44,6 @@ public class WxMessageServiceImpl implements WxMessageService {
         Date payDate = DateUtils.parseDate(mapData.get("time_end"), new String[]{"yyyyMMddHHmmss"});
         //支付时间
         messageDataMap.put("keyword1", genTemplateItem(DateFormatUtils.format(payDate, "yyyy-MM-dd HH:mm:ss"), "#173177"));
-//            OrderEntity orderEntity = orderService.findByOrderId(orderId);
         //商品名称
         messageDataMap.put("keyword2", genTemplateItem(mapData.get("attach")));
         //订单金额
@@ -55,6 +54,35 @@ public class WxMessageServiceImpl implements WxMessageService {
         messageDataMap.put("keyword5", genTemplateItem("深圳伊人网网络有限公司"));
         //备注
         messageDataMap.put("remark", genTemplateItem("祝您早日寻到TA！"));
+        templateMessage.setData(messageDataMap);
+        MessageAPI.messageTemplateSend(accessTokenService.getGlobalToken(), templateMessage);
+    }
+
+    @Override
+    public void sendPartyMsg(Map<String, String> mapData) throws ParseException {
+        logger.info("开始发送约会通知消息");
+        Date visitDate = new Date();
+        TemplateMessage templateMessage = new TemplateMessage();
+        templateMessage.setTemplate_id("JoTwHkfS0KvDPDJ1lO_oBbqZvtveI5odxZ2jY0c4m6U");
+        templateMessage.setTouser(mapData.get("openid"));
+        templateMessage.setUrl(mapData.get("link"));
+        //模板消息标题
+        LinkedHashMap<String, TemplateMessageItem> messageDataMap = new LinkedHashMap<>();
+        messageDataMap.put("first", genTemplateItem("您好，您有..", "#173177"));
+        //预约人员
+        messageDataMap.put("keyword1",genTemplateItem(mapData.get("userName")));
+        //预约类型
+        messageDataMap.put("keyword2",  genTemplateItem("约会", "#173177"));
+        //预约理由
+        messageDataMap.put("keyword3", genTemplateItem(mapData.get("reason")));
+        //访问时间
+        messageDataMap.put("keyword4", genTemplateItem(DateFormatUtils.format(visitDate, "yyyy-MM-dd HH:mm:ss"), "#173177"));
+        int i = (int)(5+Math.random()*(20-5+1));
+        Date endDate = new Date(visitDate.getTime()+i*60*1000);
+        //结束时间
+        messageDataMap.put("keyword5", genTemplateItem(DateFormatUtils.format(endDate, "yyyy-MM-dd HH:mm:ss"), "#173177"));
+        //备注
+        messageDataMap.put("remark", genTemplateItem("请尽快处理！"));
         templateMessage.setData(messageDataMap);
         MessageAPI.messageTemplateSend(accessTokenService.getGlobalToken(), templateMessage);
     }

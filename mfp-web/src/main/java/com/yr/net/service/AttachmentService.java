@@ -50,6 +50,16 @@ public class AttachmentService {
     }
 
     /**
+     * 根据用户id取最新的文件
+     * @param businessId
+     * @param fileType
+     * @return
+     */
+    public Attachment findFirstByBusinessIdAndFileType(Long businessId,Integer fileType){
+        return attachmentRepository.findFirstByBusinessIdAndFileTypeOrderByIdDesc(businessId,fileType);
+    }
+
+    /**
      * 判断用户上传的文件是否超过限制数量
      * @param businessId 用户id
      * @param fileType 文件类型

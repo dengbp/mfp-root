@@ -54,7 +54,7 @@ public class PartyService {
      * @param partyApplyReq 活动信息
      * @throws Exception 业务异常
      */
-    public void save(PartyApplyReq partyApplyReq) throws Exception {
+    public PartyApply save(PartyApplyReq partyApplyReq) throws Exception {
         if (StringUtils.isNotBlank(partyApplyReq.getBeginTimeStr())){
             Date beginTime = DateUtil.getdate1(partyApplyReq.getBeginTimeStr());
             partyApplyReq.setBeginTime(beginTime);
@@ -75,7 +75,7 @@ public class PartyService {
         }
         PartyApply partyApply = new PartyApply();
         BeanUtils.copyProperties(partyApplyReq,partyApply);
-        partyRepository.save(partyApply);
+       return partyRepository.save(partyApply);
     }
 
     /**

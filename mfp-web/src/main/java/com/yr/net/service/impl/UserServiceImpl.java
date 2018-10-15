@@ -1,5 +1,6 @@
 package com.yr.net.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.yr.net.bean.AjaxResponse;
 import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Attachment;
@@ -317,6 +318,14 @@ public class UserServiceImpl implements UserService{
                 return criteriaBuilder.and(list.toArray(p));
             }
         },pageable);
+        if (customerPage.hasContent()){
+            customerPage.getContent().forEach(customer -> {
+                Attachment attachment = attachmentService.findFirstByBusinessIdAndFileType(customer.getId(),2);
+                if(attachment != null){
+                    customer.setVideo(JSONObject.toJSONString(attachment));
+                }
+            });
+        }
         return customerPage;
     }
 

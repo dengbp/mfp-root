@@ -40,13 +40,13 @@ public class FileController {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Value("${user.pic.relative.path}")
-    private String userPicPath;//   pic/user/
+    private String userPicPath;
     @Value("${user.video.relative.path}")
-    private String userVideoPath;//   video/user/
+    private String userVideoPath;
     @Value("${domain.name}")
-    private String domainName;//http://www.goddesses.net.cn/
+    private String domainName;
     @Value("${file.upload.absolute.path}")
-    private String absolutePath;//  /usr/local/tools/apache-tomcat-8.5.30/webapps/
+    private String absolutePath;
     @Resource
     UserService userService;
     @Resource

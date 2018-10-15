@@ -1,20 +1,20 @@
 package com.yr.net.web.controller;
 
 import com.yr.net.bean.AjaxResponse;
+import com.yr.net.bean.UsersBean;
 import com.yr.net.entity.Customer;
 import com.yr.net.entity.Enroll;
+import com.yr.net.entity.PartyApply;
 import com.yr.net.entity.PartyTheme;
 import com.yr.net.model.JoinPartyReq;
 import com.yr.net.model.PartyApplyReq;
-import com.yr.net.service.PartyRefuseService;
-import com.yr.net.service.UserService;
-import com.yr.net.service.PartyService;
-import com.yr.net.service.PartyThemeService;
+import com.yr.net.service.*;
 import com.yr.net.util.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * All rights Reserved, Designed By SEGI
@@ -49,6 +51,10 @@ public class PartyController {
     PartyThemeService partyThemeService;
     @Resource
     PartyRefuseService partyRefuseService;
+    @Resource
+    WxMessageService wxMessageService;
+    @Value("${party.info.url}")
+    private String url;
 
     @GetMapping("/getRefuse")
     public AjaxResponse getRefuse(@RequestParam(value = "typeId") Integer typeId){
@@ -76,7 +82,14 @@ public class PartyController {
         if (partyApplyReq.getPartyType().intValue()==2){
             ajaxResponse = AjaxResponse.success().setMsg("活动申请/发布成功");
         }
-        partyService.save(partyApplyReq);
+        PartyApply partyApply = partyService.save(partyApplyReq);
+        Customer usersBean = userService.findCustomerById(partyApplyReq.getPublisherId());
+        Map<String,String> mapData = new HashMap<>();
+        mapData.put("openid",usersBean.getOpenId());
+        mapData.put("userName",usersBean.getUserName());
+        mapData.put("reason",partyApplyReq.getReason());
+        mapData.put("link",url.concat("?id=").concat(partyApply.getId().toString()));
+        wxMessageService.sendPartyMsg(mapData);
         return ajaxResponse;
     }
 

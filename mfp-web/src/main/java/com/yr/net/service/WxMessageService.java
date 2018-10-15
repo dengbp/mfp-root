@@ -15,6 +15,13 @@ public interface WxMessageService {
     void sendBuySuccessMsg(Map<String,String> mapData) throws ParseException;
 
     /**
+     * 约会通知
+     * @param mapData mapData
+     * @throws ParseException ParseException
+     */
+    void sendPartyMsg(Map<String,String> mapData) throws ParseException;
+
+    /**
      * 客服消息推送
      * @param customMessage customMessage
      * @param serverUrl serverUrl

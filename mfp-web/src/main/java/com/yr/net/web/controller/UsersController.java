@@ -351,7 +351,7 @@ public class UsersController {
 
     /**
      * 用户相册
-     * @param id id
+     * @param id 用户id
      * @param fileType 文件类型1:图片；2:视频
      * @return 返回相册
      */
@@ -366,7 +366,7 @@ public class UsersController {
 
     /**
      * 用户视频
-     * @param id id
+     * @param id 用户id
      * @param fileType 文件类型1:图片；2:视频
      * @return 返回视频
      */
