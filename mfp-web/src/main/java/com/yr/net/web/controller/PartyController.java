@@ -12,6 +12,7 @@ import com.yr.net.service.*;
 import com.yr.net.util.RegexUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,14 +83,69 @@ public class PartyController {
         if (partyApplyReq.getPartyType().intValue()==2){
             ajaxResponse = AjaxResponse.success().setMsg("活动申请/发布成功");
         }
-        PartyApply partyApply = partyService.save(partyApplyReq);
+
         Customer usersBean = userService.findCustomerById(partyApplyReq.getPublisherId());
-        Map<String,String> mapData = new HashMap<>();
-        mapData.put("openid",usersBean.getOpenId());
-        mapData.put("userName",usersBean.getUserName());
-        mapData.put("reason",partyApplyReq.getReason());
-        mapData.put("link",url.concat("?id=").concat(partyApply.getId().toString()));
-        wxMessageService.sendPartyMsg(mapData);
+        partyApplyReq.setPublisher(usersBean.getUserName());
+        Long applyId = partyApplyReq.getId();
+        if(null != applyId){
+            List<PartyApply> list = partyService.queryByType(applyId, partyApplyReq.getPartyType());
+            partyApplyReq.setCreateTime(list.get(0).getCreateTime());
+        }
+
+        PartyApply partyApply = partyService.save(partyApplyReq);
+
+        //开始约会推送
+        Long partyStatus = partyApply.getStatus();
+        if(null != partyStatus) {
+            Map<String,String> mapData = new HashMap<>();
+            mapData.put("partyTime", DateFormatUtils.format(partyApply.getConductTime(), "yyyy-MM-dd HH:mm"));
+            mapData.put("reason",partyApply.getReason());
+            mapData.put("remarks",partyApply.getRemarks());
+
+            if(partyStatus == 0){
+                //约会申请提交(推送给被约人)
+                //获取被约者用户数据
+                String publisherName = usersBean.getUserName();
+                usersBean = userService.findCustomerById(partyApply.getSecondId());
+                mapData.put("openid", usersBean.getOpenId());
+                mapData.put("userName", publisherName);
+                mapData.put("first", "您好，您有一个邀约申请");
+                mapData.put("link", url.concat("partyContract?applyId=").concat(partyApply.getId().toString()));
+            } if (partyStatus == 4) {
+                //同意约会(推送给申请人)
+                mapData.put("openid", usersBean.getOpenId());
+                mapData.put("userName", usersBean.getUserName());
+                mapData.put("first", "您好，对方已同意您的邀约申请");
+                mapData.put("link", url.concat("partyReview?applyId=").concat(partyApply.getId().toString()));
+            } else if (partyStatus == 5) {
+                //拒绝约会(推送给申请人)
+                mapData.put("openid", usersBean.getOpenId());
+                mapData.put("userName", usersBean.getUserName());
+                mapData.put("first", "您好，对方已拒绝您的邀约申请");
+                mapData.put("link", url.concat("partyReview?applyId=").concat(partyApply.getId().toString()));
+            } else if (partyStatus == 1) {
+                //开始约会(推送给被约人)
+                String publisherName = usersBean.getUserName();
+                usersBean = userService.findCustomerById(partyApply.getSecondId());
+                mapData.put("openid", usersBean.getOpenId());
+                mapData.put("userName", publisherName);
+                mapData.put("first", "对方已同意您的邀约，请打扮得漂漂亮亮的准备赴约吧");
+                mapData.put("link", url.concat("partyReview?applyId=").concat(partyApply.getId().toString()));
+            } else if (partyStatus == 6) {
+                //毁约(推送给被约人)
+                String publisherName = usersBean.getUserName();
+                usersBean = userService.findCustomerById(partyApply.getSecondId());
+                mapData.put("openid", usersBean.getOpenId());
+                mapData.put("userName", publisherName);
+                mapData.put("first", "您好，发起人已取消本次约会");
+                mapData.put("link", url.concat("partyReview?applyId=").concat(partyApply.getId().toString()));
+            }
+
+            wxMessageService.sendPartyMsg(mapData);
+            return ajaxResponse;
+        }else{
+            ajaxResponse = AjaxResponse.success().setMsg("活动申请/发布失败");
+        }
         return ajaxResponse;
     }
 
@@ -185,6 +241,11 @@ public class PartyController {
         if(null == partyApplyReq.getPublisherId()){
 
             ajaxResponse.setMsg("发布者id不能为空");
+            return true;
+        }
+
+        if(StringUtils.isBlank(partyApplyReq.getReason())){
+            ajaxResponse.setMsg("约TA理由不能为空");
             return true;
         }
 

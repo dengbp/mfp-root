@@ -62,13 +62,16 @@ public class WxMessageServiceImpl implements WxMessageService {
     public void sendPartyMsg(Map<String, String> mapData) throws ParseException {
         logger.info("开始发送约会通知消息");
         Date visitDate = new Date();
+        int i = (int)(5+Math.random()*(20-5+1));
+        String endDate = DateFormatUtils.format(new Date(visitDate.getTime()+i*60*1000), "yyyy-MM-dd HH:mm:ss");
+
         TemplateMessage templateMessage = new TemplateMessage();
         templateMessage.setTemplate_id("JoTwHkfS0KvDPDJ1lO_oBbqZvtveI5odxZ2jY0c4m6U");
         templateMessage.setTouser(mapData.get("openid"));
         templateMessage.setUrl(mapData.get("link"));
         //模板消息标题
         LinkedHashMap<String, TemplateMessageItem> messageDataMap = new LinkedHashMap<>();
-        messageDataMap.put("first", genTemplateItem("您好，您有..", "#173177"));
+        messageDataMap.put("first", genTemplateItem(mapData.get("first"), "#173177"));
         //预约人员
         messageDataMap.put("keyword1",genTemplateItem(mapData.get("userName")));
         //预约类型
@@ -76,13 +79,11 @@ public class WxMessageServiceImpl implements WxMessageService {
         //预约理由
         messageDataMap.put("keyword3", genTemplateItem(mapData.get("reason")));
         //访问时间
-        messageDataMap.put("keyword4", genTemplateItem(DateFormatUtils.format(visitDate, "yyyy-MM-dd HH:mm:ss"), "#173177"));
-        int i = (int)(5+Math.random()*(20-5+1));
-        Date endDate = new Date(visitDate.getTime()+i*60*1000);
+        messageDataMap.put("keyword4", genTemplateItem(mapData.get("partyTime"), "#173177"));
         //结束时间
-        messageDataMap.put("keyword5", genTemplateItem(DateFormatUtils.format(endDate, "yyyy-MM-dd HH:mm:ss"), "#173177"));
+        messageDataMap.put("keyword5", genTemplateItem(endDate, "#173177"));
         //备注
-        messageDataMap.put("remark", genTemplateItem("请尽快处理！"));
+        messageDataMap.put("remark", genTemplateItem(mapData.get("remarks")));
         templateMessage.setData(messageDataMap);
         MessageAPI.messageTemplateSend(accessTokenService.getGlobalToken(), templateMessage);
     }

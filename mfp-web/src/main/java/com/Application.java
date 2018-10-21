@@ -1,9 +1,11 @@
 package com;
 
 
+import com.yr.net.config.CorsConfig;
 import com.yr.net.util.SpringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +28,9 @@ public class Application {
     ReentrantLock lock(){
         return new ReentrantLock();
     }
+
+    @Autowired
+    CorsConfig corsConfig;
 
     public static void main(String[] args) throws InterruptedException {
         SpringApplication.run(Application.class, args);

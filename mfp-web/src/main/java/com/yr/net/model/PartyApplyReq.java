@@ -33,9 +33,4 @@ public class PartyApplyReq extends PartyApply{
      * 报名结束时间(yyyy-MM-dd HH:mm:ss)
      */
     private String endTimeStr;
-
-    /**
-     * 约ta理由
-     */
-    private String reason;
 }

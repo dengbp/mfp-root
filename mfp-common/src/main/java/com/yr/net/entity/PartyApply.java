@@ -135,4 +135,8 @@ public class PartyApply implements Serializable {
      */
     private String datingResults;
 
+    /**
+     * 约TA的理由
+     */
+    private String reason;
 }
