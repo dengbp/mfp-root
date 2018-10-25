@@ -113,6 +113,7 @@ public class UsersController {
         if (usersBean != null) {
             String token = JWTUtil.sign(userInfoReq.getPhone(), usersBean.getPassword());
             LoginResp loginResp = new LoginResp(usersBean.getId(),usersBean.getRole()==null?new Integer(-1):new Integer(usersBean.getRole()),token);
+            loginResp.setSex(usersBean.getSex());
             log.info("登录成功，返回结果【{}】",JSONObject.toJSONString(loginResp));
             return AjaxResponse.success().setResult(loginResp).setMsg("登录成功");
         } else {
@@ -124,6 +125,7 @@ public class UsersController {
             customer = userService.saveOrUpdate(customer);
             String token = JWTUtil.sign(userInfoReq.getPhone(), customer.getPassword());
             LoginResp loginResp = new LoginResp(customer.getId(),customer.getRole()==null?new Integer(-1):new Integer(customer.getRole()),token);
+            loginResp.setSex(usersBean.getSex());
             return AjaxResponse.success().setResult(loginResp).setMsg("登录成功");
         }
     }

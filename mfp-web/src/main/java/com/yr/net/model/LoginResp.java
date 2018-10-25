@@ -28,4 +28,9 @@ public class LoginResp extends BaseReq{
      * 角色。0：相亲；1：红娘；
      */
     private Integer role;
+
+    /**
+     * 性别 1:男;2:女
+     */
+    private Integer sex;
 }

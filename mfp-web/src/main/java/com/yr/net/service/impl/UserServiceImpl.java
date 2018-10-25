@@ -76,18 +76,10 @@ public class UserServiceImpl implements UserService{
             String IdNumber = customer.getIdNumber();
             UsersBean usersBean = new UsersBean();
             BeanUtils.copyProperties(customer,usersBean);
-            if(customer.getIdNumber()!=null){
+            if(StringUtils.isNotBlank(IdNumber)){
                 String birthday = IdNumber.substring(10,12).concat("-").concat(IdNumber.substring(12,14));
                 usersBean.setBirthday(birthday);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-                Date date = null;
-                try {
-                    date = dateFormat.parse(IdNumber.substring(6,14));
-                    Integer age = AgeUtils.getAgeByDate(date);
-                    usersBean.setAge(age);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                usersBean.setAge(this.getAge(IdNumber));
                 usersBean.setIdNumber("***");
             }
             if(customer.getPassword()!=null){
@@ -96,6 +88,20 @@ public class UserServiceImpl implements UserService{
             return usersBean;
         }
         return null;
+    }
+
+    private int getAge(String idNumber){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        Date date = null;
+        int age = 0;
+        try {
+            date = dateFormat.parse(idNumber.substring(6,14));
+            age = AgeUtils.getAgeByDate(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }finally {
+            return age;
+        }
     }
 
     /**
@@ -321,6 +327,15 @@ public class UserServiceImpl implements UserService{
         },pageable);
         if (customerPage.hasContent()){
             customerPage.getContent().forEach(customer -> {
+                String IdNumber = customer.getIdNumber();
+                if(StringUtils.isNotBlank(IdNumber)){
+                    customer.setAge(this.getAge(IdNumber));
+                    customer.setIdNumber("***");
+                }
+                if(customer.getPassword()!=null){
+                    customer.setPassword("***");
+                }
+                customer.setPhone("***");
                 Attachment attachment = attachmentService.findFirstByBusinessIdAndFileType(customer.getId(),2);
                 if(attachment != null){
                     customer.setVideo(JSONObject.toJSONString(attachment));
