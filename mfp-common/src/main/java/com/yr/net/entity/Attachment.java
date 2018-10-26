@@ -47,4 +47,5 @@ public class Attachment implements Serializable{
     private String remarks;//备注
     private Date createTime;//记录创建时间
     private Date updateTime;//被修改时间
+    private String thumbnail;//视频缩略图
 }
