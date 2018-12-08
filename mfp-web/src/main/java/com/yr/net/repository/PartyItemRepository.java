@@ -1,5 +1,6 @@
 package com.yr.net.repository;
 
+import com.yr.net.entity.PartyItem;
 import com.yr.net.entity.PartyTheme;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -18,14 +19,14 @@ import java.util.List;
  *     活动dao
  * </p>
  */
-public interface PartyThemeRepository extends JpaRepository<PartyTheme, Long>,JpaSpecificationExecutor<PartyTheme> {
+public interface PartyItemRepository extends JpaRepository<PartyItem, Long>,JpaSpecificationExecutor<PartyItem> {
 
     /**
-     * 根据约会、活动类型查主题、约会信息
-     * @param themeType
+     * 根据约会、活动类型id取约会项目
+     * @param themeId
      * @return
      */
 
-    List<PartyTheme> findByThemeType(Integer themeType);
+    List<PartyItem> findByThemeId(Long themeId);
 
 }

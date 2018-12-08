@@ -18,24 +18,24 @@ import java.util.Date;
  * @Date: 2018/7/5
  * </pre>
  * <p>
- *     约会主题映射表
+ *     约会项目映射表
  * </p>
  */
 @Data
-@Entity(name="yr_party_theme")
-public class PartyTheme implements Serializable{
+@Entity(name="yr_party_item")
+public class PartyItem implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 约会、活动主题类型：0：约会；1：活动
+     * 约会项id
      */
-    private Integer themeType;
+    private Long themeId;
     /**
-     * 约会主题名称
+     * 约会项名称
      */
-    private String themeName;
+    private String partyItem;
 
     private Date createTime;
 
