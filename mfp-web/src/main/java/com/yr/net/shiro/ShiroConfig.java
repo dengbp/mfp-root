@@ -1,6 +1,5 @@
 package com.yr.net.shiro;
 
-import com.yr.net.util.SpringUtil;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
