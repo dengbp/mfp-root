@@ -1,4 +1,4 @@
-package com.yr.net.queue;
+package com.yr.net.queue11;
 
 /**
  * @author dengbp
