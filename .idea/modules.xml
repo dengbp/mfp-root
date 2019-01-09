@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/mfp-common/mfp-common.iml" filepath="$PROJECT_DIR$/mfp-common/mfp-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/mfp-core/mfp-core.iml" filepath="$PROJECT_DIR$/mfp-core/mfp-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/mfp-root.iml" filepath="$PROJECT_DIR$/mfp-root.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mfp-server/mfp-server.iml" filepath="$PROJECT_DIR$/mfp-server/mfp-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/mfp-web/mfp-web.iml" filepath="$PROJECT_DIR$/mfp-web/mfp-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/yr-process/yr-process.iml" filepath="$PROJECT_DIR$/yr-process/yr-process.iml" />
       <module fileurl="file://$PROJECT_DIR$/yr-server/yr-server.iml" filepath="$PROJECT_DIR$/yr-server/yr-server.iml" />
