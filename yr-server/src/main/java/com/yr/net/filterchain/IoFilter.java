@@ -1,27 +1,14 @@
 package com.yr.net.filterchain;
 
+import com.yr.net.session.IoSession;
+import com.yr.net.write.WriteRequest;
+
 /**
  * The interface Io filter.
  */
 public interface IoFilter {
-    /**
-     * Invoked by {@link ReferenceCountingFilter} when this filter
-     * is added to a {@link IoFilterChain} at the first time, so you can
-     * initialize shared resources.  Please note that this method is never
-     * called if you don't wrap a filter with {@link ReferenceCountingFilter}.
-     *
-     * @throws Exception the exception
-     */
     void init() throws Exception;
 
-    /**
-     * Invoked by {@link ReferenceCountingFilter} when this filter
-     * is not used by any {@link IoFilterChain} anymore, so you can destroy
-     * shared resources.  Please note that this method is never called if
-     * you don't wrap a filter with {@link ReferenceCountingFilter}.
-     *
-     * @throws Exception the exception
-     */
     void destroy() throws Exception;
 
     /**
@@ -76,94 +63,20 @@ public interface IoFilter {
      */
     void onPostRemove(IoFilterChain parent, String name, NextFilter nextFilter) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#sessionCreated(IoSession)} event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @throws Exception the exception
-     */
     void sessionCreated(NextFilter nextFilter, IoSession session) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#sessionOpened(IoSession)} event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @throws Exception the exception
-     */
     void sessionOpened(NextFilter nextFilter, IoSession session) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#sessionClosed(IoSession)} event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @throws Exception the exception
-     */
     void sessionClosed(NextFilter nextFilter, IoSession session) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#sessionIdle(IoSession, IdleStatus)}
-     * event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @param status     the status
-     * @throws Exception the exception
-     */
-    void sessionIdle(NextFilter nextFilter, IoSession session, IdleStatus status) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#exceptionCaught(IoSession, Throwable)}
-     * event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @param cause      the cause
-     * @throws Exception the exception
-     */
     void exceptionCaught(NextFilter nextFilter, IoSession session, Throwable cause) throws Exception;
-
-    /**
-     * Filters {@link IoHandler#messageReceived(IoSession, Object)}
-     * event.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @param message    the message
-     * @throws Exception the exception
-     */
     void messageReceived(NextFilter nextFilter, IoSession session, Object message) throws Exception;
 
-    /**
-     * Filters {@link IoHandler#messageSent(IoSession, Object)}
-     * event.
-     *
-     * @param nextFilter   the next filter
-     * @param session      the session
-     * @param writeRequest the write request
-     * @throws Exception the exception
-     */
     void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception;
 
-    /**
-     * Filters {@link IoSession#close()} method invocation.
-     *
-     * @param nextFilter the next filter
-     * @param session    the session
-     * @throws Exception the exception
-     */
     void filterClose(NextFilter nextFilter, IoSession session) throws Exception;
 
-    /**
-     * Filters {@link IoSession#write(Object)} method invocation.
-     *
-     * @param nextFilter   the next filter
-     * @param session      the session
-     * @param writeRequest the write request
-     * @throws Exception the exception
-     */
     void filterWrite(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception;
 
     /**
@@ -191,13 +104,6 @@ public interface IoFilter {
          */
         void sessionClosed(IoSession session);
 
-        /**
-         * Forwards <tt>sessionIdle</tt> event to next filter.
-         *
-         * @param session the session
-         * @param status  the status
-         */
-        void sessionIdle(IoSession session, IdleStatus status);
 
         /**
          * Forwards <tt>exceptionCaught</tt> event to next filter.
