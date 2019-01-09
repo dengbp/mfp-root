@@ -9,19 +9,27 @@
         <module name="mfp-app" />
         <module name="mfp-common" />
         <module name="mfp-core" />
-        <module name="mfp-server" />
         <module name="mfp-web" />
+        <module name="yr-process" />
+        <module name="yr-server" />
+      </profile>
+      <profile name="Annotation profile for mfp-root" enabled="true">
+        <sourceOutputDir name="../yr-server/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../yr-server/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="mfp-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
-      <module name="mfp-app" target="1.8" />
-      <module name="mfp-common" target="1.8" />
-      <module name="mfp-core" target="1.8" />
-      <module name="mfp-net" target="1.8" />
-      <module name="mfp-oauth" target="1.8" />
-      <module name="mfp-root" target="1.8" />
-      <module name="mfp-server" target="1.8" />
+      <module name="mfp-app" target="1.5" />
+      <module name="mfp-common" target="1.5" />
+      <module name="mfp-core" target="1.5" />
+      <module name="mfp-root" target="1.5" />
+      <module name="mfp-server" target="1.5" />
       <module name="mfp-web" target="1.8" />
+      <module name="process" target="1.5" />
+      <module name="yr-process" target="1.5" />
+      <module name="yr-server" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

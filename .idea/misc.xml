@@ -33,6 +33,7 @@
         <option value="$PROJECT_DIR$/ddfdf/pom.xml" />
         <option value="$PROJECT_DIR$/mfp-oauth/pom.xml" />
         <option value="$PROJECT_DIR$/mfpcore/pom.xml" />
+        <option value="$PROJECT_DIR$/process/pom.xml" />
       </set>
     </option>
   </component>
